@@ -2,14 +2,30 @@
     "name": "ts-bisect",
     "version": "0.0.1",
     "description": "",
+    "type": "module",
     "main": "dist/index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
     "keywords": [],
     "author": "Jake Bailey",
     "license": "MIT",
     "devDependencies": {
+        "@tsconfig/node12": "^12.1.0",
+        "@types/node": "^20.6.0",
+        "@typescript-eslint/eslint-plugin": "^6.6.0",
+        "@typescript-eslint/parser": "^6.6.0",
+        "dprint": "^0.40.2",
+        "eslint": "^8.49.0",
+        "eslint-plugin-simple-import-sort": "^10.0.0",
+        "eslint-plugin-unicorn": "^48.0.1",
+        "rimraf": "^5.0.1",
         "typescript": "^5.2.2"
+    },
+    "dependencies": {
+        "execa": "^6.1.0"
+    },
+    "packageManager": "pnpm@8.7.4",
+    "scripts": {
+        "build": "tsc",
+        "watch": "tsc --watch",
+        "prepack": "rimraf dist && npm run build"
     }
 }
