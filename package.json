@@ -7,8 +7,10 @@
     "keywords": [],
     "author": "Jake Bailey",
     "license": "MIT",
+    "preferUnplugged": true,
     "devDependencies": {
         "@tsconfig/node12": "^12.1.0",
+        "@types/adm-zip": "^0.5.1",
         "@types/node": "^20.6.0",
         "@typescript-eslint/eslint-plugin": "^6.6.0",
         "@typescript-eslint/parser": "^6.6.0",
@@ -20,7 +22,9 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "execa": "^6.1.0"
+        "adm-zip": "^0.5.10",
+        "execa": "^7.2.0",
+        "node-fetch": "^3.3.2"
     },
     "packageManager": "pnpm@8.7.4",
     "scripts": {
