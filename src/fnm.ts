@@ -71,12 +71,6 @@ export async function runInNode(version: string, command: string[], opts?: Execa
     await ensureFnm();
     if (!installedNode.has(version)) {
         await execa(fnmExe, ["install", version], { env: { FNM_DIR: fnmDir } });
-        try {
-            await run(["corepack", "enable"]);
-            await run(["corepack", "enable", "npm"]);
-        } catch {
-            // Ignore
-        }
         installedNode.add(version);
     }
 

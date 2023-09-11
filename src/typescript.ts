@@ -57,21 +57,39 @@ async function getCommitDate() {
     return stdout;
 }
 
+function hasPackageLock() {
+    return fs.existsSync(path.join(tsDir, "package-lock.json"));
+}
+
+async function getPackageManager() {
+    const packageJsonContents = await fs.promises.readFile(path.join(tsDir, "package.json"), "utf8");
+    const packageJson = JSON.parse(packageJsonContents);
+    const packageManager = packageJson?.packageManager;
+    if (packageManager) {
+        return ["npx", packageManager];
+    }
+    return ["npm"];
+}
+
 async function tryInstall() {
-    if (fs.existsSync(path.join(tsDir, "package-lock.json"))) {
+    const packageManager = await getPackageManager();
+
+    if (hasPackageLock()) {
         try {
-            await runInNode("20", ["npm", "ci"], { cwd: tsDir });
+            await runInNode("20", [...packageManager, "ci"], { cwd: tsDir });
             return;
         } catch {}
     }
 
+    await cleanTypeScript(); // TODO: just delete node modules?
     const commitDate = await getCommitDate();
-    await runInNode("20", ["npm", "install", `--before=${commitDate}`], { cwd: tsDir });
+    await runInNode("20", [...packageManager, "install", `--before=${commitDate}`], { cwd: tsDir });
 }
 
 async function fixBuild() {
-    // Early builds of TS were produce on a case-insensitive file system, but these three
-    // locales were not lowercase; fix this up.
+    // Early builds of TS were produce on a case-insensitive file system; confusingly
+    // the input and output files plus the build config were inconsistent, so we need
+    // to fix them up.
     for (const file of ["Jakefile.js", "Gulpfile.ts", "Gulpfile.js"]) {
         const p = path.join(tsDir, file);
         if (!fs.existsSync(p)) {
@@ -120,9 +138,7 @@ async function tryBuildFns() {
 async function tryBuild() {
     await ensureRepo();
 
-    // First, try to build, keeping node_modules.
-    const hasNodeModules = (await tryStat(path.join(tsDir, "node_modules")))?.isDirectory();
-    if (hasNodeModules) {
+    if (!hasPackageLock() && fs.existsSync(path.join(tsDir, "node_modules"))) {
         try {
             await tryBuildFns();
             return;
