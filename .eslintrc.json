@@ -21,6 +21,7 @@
         "no-inner-declarations": 0,
         "no-undef": 0,
         "no-unused-vars": 0,
+        "no-empty": 0,
         "simple-import-sort/imports": "error",
         "simple-import-sort/exports": "error",
         "@typescript-eslint/no-import-type-side-effects": "error",
