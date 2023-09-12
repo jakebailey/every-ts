@@ -34,7 +34,8 @@ async function ensureRepo() {
 }
 
 export async function cleanTypeScript(keepNodeModules?: boolean) {
-    await execa("git", keepNodeModules ? ["clean", "-fdx", "-e", "/node_modules"] : ["clean", "-fdx"], { cwd: tsDir });
+    const excludes = keepNodeModules ? ["-e", "/node_modules"] : [];
+    await execa("git", ["clean", "-fdx", ...excludes], { cwd: tsDir });
     await execa("git", ["reset", "--hard", "HEAD"], { cwd: tsDir });
 }
 
@@ -86,6 +87,12 @@ async function tryInstall() {
     await runInNode("20", [...packageManagerCommand, "install", `--before=${commitDate}`], { cwd: tsDir });
 }
 
+const badLocales = [
+    [/pt-BR/g, "pt-BR", "pt-br"],
+    [/zh-CN/g, "zh-CN", "zh-cn"],
+    [/zh-TW/g, "zh-TW", "zh-tw"],
+] as const;
+
 async function fixBuild() {
     // Early builds of TS were produce on a case-insensitive file system; confusingly
     // the input and output files plus the build config were inconsistent, so we need
@@ -95,11 +102,11 @@ async function fixBuild() {
         if (!fs.existsSync(p)) {
             continue;
         }
-        // TODO: remove out of lib too
         let contents = await fs.promises.readFile(p, "utf8");
-        contents = contents.replace(/pt-BR/g, "pt-br");
-        contents = contents.replace(/zh-CN/g, "zh-cn");
-        contents = contents.replace(/zh-TW/g, "zh-tw");
+        for (const [re, bad, good] of badLocales) {
+            contents = contents.replace(re, good);
+            await fs.promises.rm(path.join(tsDir, "lib", bad), { recursive: true, force: true });
+        }
         await fs.promises.writeFile(p, contents, "utf8");
     }
 }
