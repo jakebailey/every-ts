@@ -30,6 +30,7 @@
     "scripts": {
         "build": "tsc",
         "watch": "tsc --watch",
-        "prepack": "rimraf dist && npm run build"
+        "prepack": "rimraf dist && npm run build",
+        "dev": "NODE_DEBUG=execa node --enable-source-maps ./dist/main.js"
     }
 }
