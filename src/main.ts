@@ -1,6 +1,6 @@
 import { Builtins, Cli } from "clipanion";
 
-import { BisectStart, Switch } from "./git.js";
+import { bisectActionCommands, Switch } from "./git.js";
 import { Fetch } from "./typescript.js";
 
 const cli = new Cli({
@@ -9,7 +9,9 @@ const cli = new Cli({
 });
 
 cli.register(Builtins.HelpCommand);
-cli.register(BisectStart);
+for (const command of bisectActionCommands) {
+    cli.register(command);
+}
 cli.register(Switch);
 cli.register(Fetch);
 
