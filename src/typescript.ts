@@ -61,7 +61,7 @@ function hasPackageLock() {
     return fs.existsSync(path.join(tsDir, "package-lock.json"));
 }
 
-async function getPackageManager() {
+async function getPackageManagerCommand() {
     const packageJsonContents = await fs.promises.readFile(path.join(tsDir, "package.json"), "utf8");
     const packageJson = JSON.parse(packageJsonContents);
     const packageManager = packageJson?.packageManager;
@@ -72,18 +72,18 @@ async function getPackageManager() {
 }
 
 async function tryInstall() {
-    const packageManager = await getPackageManager();
+    const packageManagerCommand = await getPackageManagerCommand();
 
     if (hasPackageLock()) {
         try {
-            await runInNode("20", [...packageManager, "ci"], { cwd: tsDir });
+            await runInNode("20", [...packageManagerCommand, "ci"], { cwd: tsDir });
             return;
         } catch {}
     }
 
     await cleanTypeScript(); // TODO: just delete node modules?
     const commitDate = await getCommitDate();
-    await runInNode("20", [...packageManager, "install", `--before=${commitDate}`], { cwd: tsDir });
+    await runInNode("20", [...packageManagerCommand, "install", `--before=${commitDate}`], { cwd: tsDir });
 }
 
 async function fixBuild() {
@@ -95,6 +95,7 @@ async function fixBuild() {
         if (!fs.existsSync(p)) {
             continue;
         }
+        // TODO: remove out of lib too
         let contents = await fs.promises.readFile(p, "utf8");
         contents = contents.replace(/pt-BR/g, "pt-br");
         contents = contents.replace(/zh-CN/g, "zh-cn");
