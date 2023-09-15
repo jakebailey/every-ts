@@ -2,7 +2,7 @@ import { Command, type CommandClass, Option } from "clipanion";
 import { execa } from "execa";
 
 import { tsDir } from "./common.js";
-import { build, cleanTypeScript } from "./typescript.js";
+import { build, cleanTypeScript } from "./repo.js";
 
 async function isBisecting() {
     try {

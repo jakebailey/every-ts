@@ -1,7 +1,7 @@
 import { Builtins, Cli } from "clipanion";
 
 import { bisectActionCommands, Switch } from "./git.js";
-import { Fetch } from "./typescript.js";
+import { Fetch } from "./repo.js";
 
 const cli = new Cli({
     binaryName: "ts-bisect",
