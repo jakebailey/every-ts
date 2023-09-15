@@ -161,21 +161,12 @@ async function tryBuild() {
 
 export async function build() {
     await tryBuild();
+    await execa("node", [getTscPath(), "--version"], { stdout: "inherit" });
+    console.log("TypeScript built successfully!");
+}
 
-    // Make sure it worked.
+export function getTscPath() {
     const libTsc = path.join(tsDir, "lib", "tsc.js");
     const binTsc = path.join(tsDir, "bin", "tsc.js");
-    const outputTsc = fs.existsSync(libTsc) ? libTsc : binTsc;
-    // const builtTsc = path.join(tsDir, "built", "local", "tsc.js");
-    // const builtTscRelease = path.join(tsDir, "built", "local", "tsc.release.js");
-    // const inputTsc = fs.existsSync(builtTscRelease) ? builtTscRelease : builtTsc;
-
-    // const contents1 = await fs.promises.readFile(outputTsc, "utf8");
-    // const contents2 = await fs.promises.readFile(inputTsc, "utf8");
-    // if (contents1 !== contents2) {
-    //     throw new Error(`${outputTsc} does not match ${inputTsc}}`);
-    // }
-
-    await execa("node", [outputTsc, "--version"], { stdout: "inherit" });
-    console.log("TypeScript built successfully!");
+    return fs.existsSync(libTsc) ? libTsc : binTsc;
 }

@@ -23,7 +23,7 @@ const actions = ["bad", "good", "skip", "new", "old", "start", "reset"];
 export const bisectActionCommands: CommandClass[] = actions.map((action) => {
     return class extends Command {
         static override paths: string[][] = [[`bisect`, action]];
-        args = Option.Rest();
+        args = Option.Proxy();
 
         override async execute(): Promise<number | void> {
             await cleanTypeScript(true);
