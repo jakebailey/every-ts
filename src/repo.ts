@@ -2,9 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { Command } from "clipanion";
-import { execa } from "execa";
 
-import { ensureDataDir, tryStat, tsDir } from "./common.js";
+import { ensureDataDir, execa, tryStat, tsDir } from "./common.js";
 import { runInNode } from "./fnm.js";
 
 let repoCloned = false;

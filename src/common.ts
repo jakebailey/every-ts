@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import url from "node:url";
 
+import { execa as _execa, type Options as ExecaOptions } from "execa";
+
 const __filename = url.fileURLToPath(new URL(import.meta.url));
 const __dirname = path.dirname(__filename);
 
@@ -22,3 +24,12 @@ export async function tryStat(p: string) {
 export async function ensureDataDir() {
     await fs.promises.mkdir(dataDir, { recursive: true });
 }
+
+// TODO: make a flag?
+const verbose = true;
+
+export function execa(file: string, args?: readonly string[], options?: ExecaOptions) {
+    return _execa(file, args, { ...options, verbose });
+}
+
+export { type Options as ExecaOptions } from "execa";

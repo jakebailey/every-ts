@@ -1,6 +1,6 @@
 import { Command, Option } from "clipanion";
-import { execa } from "execa";
 
+import { execa } from "./common.js";
 import { getTscPath } from "./repo.js";
 
 export class Tsc extends Command {
