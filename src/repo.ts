@@ -21,10 +21,17 @@ export async function ensureRepo() {
     repoCloned = true;
 }
 
-export async function cleanTypeScript(keepNodeModules?: boolean) {
-    const excludes = keepNodeModules ? ["-e", "/node_modules"] : [];
+export async function resetTypeScript(...keep: string[]) {
+    const excludes = [];
+    for (const exclude of keep ?? []) {
+        excludes.push("-e", exclude);
+    }
     await execa("git", ["clean", "-fdx", ...excludes], { cwd: tsDir });
     await execa("git", ["reset", "--hard", "HEAD"], { cwd: tsDir });
+
+    if (!keep?.includes("node_modules")) {
+        await fs.promises.rm(nodeModulesHashPath);
+    }
 }
 
 async function getBuildCommand() {
@@ -136,7 +143,7 @@ async function tryBuildFns() {
     for (const fn of buildFuncs) {
         try {
             // TODO: don't delete built too, for quicker bisects?
-            await cleanTypeScript(/*keepNodeModules*/ true);
+            await resetTypeScript("node_modules");
             await fixBuild();
             await fn();
             return;
