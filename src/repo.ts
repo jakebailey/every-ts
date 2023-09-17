@@ -64,13 +64,14 @@ async function tryInstall() {
     const packageManagerCommand = await getPackageManagerCommand();
 
     if (hasPackageLock()) {
+        // TODO: remember previous package-lock.json hash and skip?
         try {
             await runInNode("20", [...packageManagerCommand, "ci"], { cwd: tsDir });
             return;
         } catch {}
     }
 
-    await cleanTypeScript(); // TODO: just delete node modules?
+    await fs.promises.rm(path.join(tsDir, "node_modules"), { recursive: true, force: true });
     const commitDate = await getCommitDate();
     await runInNode("20", [...packageManagerCommand, "install", `--before=${commitDate}`], { cwd: tsDir });
 }
@@ -82,7 +83,7 @@ const badLocales = [
 ] as const;
 
 async function fixBuild() {
-    // Early builds of TS were produce on a case-insensitive file system; confusingly
+    // Early builds of TS were produced on a case-insensitive file system; confusingly
     // the input and output files plus the build config were inconsistent, so we need
     // to fix them up.
     for (const file of ["Jakefile.js", "Gulpfile.ts", "Gulpfile.js"]) {
@@ -120,6 +121,7 @@ const buildFuncs = [
 async function tryBuildFns() {
     for (const fn of buildFuncs) {
         try {
+            // TODO: don't delete built too, for quicker bisects?
             await cleanTypeScript(/*keepNodeModules*/ true);
             await fixBuild();
             await fn();
