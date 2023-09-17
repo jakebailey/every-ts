@@ -5,20 +5,6 @@ import { build, cleanTypeScript, ensureRepo } from "./repo.js";
 
 // TODO: add origin/ if needed
 
-async function isBisecting() {
-    try {
-        const { stdout } = await execa("git", ["bisect", "log"], { cwd: tsDir });
-        const lines = stdout.split(/\r?\n/);
-        if (lines.some((v) => v.startsWith("# first "))) {
-            return false;
-        }
-        const actions = lines.filter((v) => !v.startsWith("#"));
-        return actions.length >= 3;
-    } catch {
-        return false;
-    }
-}
-
 const actions = ["bad", "good", "skip", "new", "old", "start", "reset"];
 
 export const bisectActionCommands: CommandClass[] = actions.map((action) => {
@@ -29,9 +15,7 @@ export const bisectActionCommands: CommandClass[] = actions.map((action) => {
         override async execute(): Promise<number | void> {
             await cleanTypeScript(true);
             await execa("git", ["bisect", action, ...this.args], { cwd: tsDir, stdio: "inherit" });
-            if (await isBisecting()) {
-                await build();
-            }
+            await build();
         }
     };
 });
