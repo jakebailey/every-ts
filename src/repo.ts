@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { ensureDataDir, execa, tryStat, tsDir } from "./common.js";
+import { ensureDataDir, execa, hashFile, nodeModulesHashPath, tryStat, tsDir } from "./common.js";
 import { runInNode } from "./fnm.js";
 
 let repoCloned = false;
@@ -64,13 +64,27 @@ async function tryInstall() {
     const packageManagerCommand = await getPackageManagerCommand();
 
     if (hasPackageLock()) {
+        let oldHash: string;
+        try {
+            oldHash = await fs.promises.readFile(nodeModulesHashPath, "utf8");
+        } catch {
+            oldHash = "";
+        }
+
+        const newHash = await hashFile(path.join(tsDir, "package-lock.json"));
+        if (oldHash === newHash) {
+            return;
+        }
+
         // TODO: remember previous package-lock.json hash and skip?
         try {
             await runInNode("20", [...packageManagerCommand, "ci"], { cwd: tsDir });
+            await fs.promises.writeFile(nodeModulesHashPath, newHash, "utf8");
             return;
         } catch {}
     }
 
+    await fs.promises.rm(nodeModulesHashPath, { force: true, recursive: true });
     await fs.promises.rm(path.join(tsDir, "node_modules"), { recursive: true, force: true });
     const commitDate = await getCommitDate();
     await runInNode("20", [...packageManagerCommand, "install", `--before=${commitDate}`], { cwd: tsDir });

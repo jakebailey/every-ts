@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import url from "node:url";
@@ -12,6 +13,7 @@ const dataDir = path.join(packageRoot, ".data");
 export const tsDir = path.join(dataDir, "TypeScript");
 export const fnmDir = path.join(dataDir, "fnm");
 export const fnmExe = path.join(fnmDir, process.platform === "win32" ? "fnm.exe" : "fnm");
+export const nodeModulesHashPath = path.join(dataDir, "node_modules.hash");
 
 export async function tryStat(p: string) {
     try {
@@ -33,3 +35,8 @@ export function execa(file: string, args?: readonly string[], options?: ExecaOpt
 }
 
 export { type Options as ExecaOptions } from "execa";
+
+export async function hashFile(p: string) {
+    const contents = await fs.promises.readFile(p);
+    return crypto.createHash("sha256").update(contents).digest("hex");
+}
