@@ -1,38 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { ensureDataDir, execa, hashFile, nodeModulesHashPath, tryStat, tsDir } from "./common.js";
+import { execa, hashFile, nodeModulesHashPath, rimraf, tsDir } from "./common.js";
 import { runInNode } from "./fnm.js";
-
-let repoCloned = false;
-
-export async function ensureRepo() {
-    if (repoCloned) {
-        return;
-    }
-
-    await ensureDataDir();
-    const stat = await tryStat(tsDir);
-    if (!stat?.isDirectory()) {
-        console.log("Cloning TypeScript...");
-        await execa("git", ["clone", "--filter=blob:none", "https://github.com/microsoft/TypeScript.git", tsDir]);
-    }
-
-    repoCloned = true;
-}
-
-export async function resetTypeScript(...keep: string[]) {
-    const excludes = [];
-    for (const exclude of keep ?? []) {
-        excludes.push("-e", exclude);
-    }
-    await execa("git", ["clean", "-fdx", ...excludes], { cwd: tsDir });
-    await execa("git", ["reset", "--hard", "HEAD"], { cwd: tsDir });
-
-    if (!keep?.includes("node_modules")) {
-        await fs.promises.rm(nodeModulesHashPath);
-    }
-}
+import { ensureRepo, resetTypeScript } from "./git.js";
 
 async function getBuildCommand() {
     const dir = await fs.promises.readdir(tsDir);
@@ -91,8 +62,8 @@ async function tryInstall() {
         } catch {}
     }
 
-    await fs.promises.rm(nodeModulesHashPath, { force: true, recursive: true });
-    await fs.promises.rm(path.join(tsDir, "node_modules"), { recursive: true, force: true });
+    await rimraf(nodeModulesHashPath);
+    await rimraf(path.join(tsDir, "node_modules"));
     const commitDate = await getCommitDate();
     await runInNode("20", [...packageManagerCommand, "install", `--before=${commitDate}`], { cwd: tsDir });
 }
@@ -115,17 +86,13 @@ async function fixBuild() {
         let contents = await fs.promises.readFile(p, "utf8");
         for (const [re, bad, good] of badLocales) {
             contents = contents.replace(re, good);
-            await fs.promises.rm(path.join(tsDir, "lib", bad), { recursive: true, force: true });
+            await rimraf(path.join(tsDir, "lib", bad));
         }
         await fs.promises.writeFile(p, contents, "utf8");
     }
 }
 
 const buildFuncs = [
-    // async () => {
-    //     const buildCommand = await getBuildCommand();
-    //     await runInNode("20", ["npx", buildCommand, "LKG"], { cwd: tsDir });
-    // },
     async () => {
         const buildCommand = await getBuildCommand();
         await runInNode("20", ["npx", buildCommand, "local"], { cwd: tsDir });

@@ -40,3 +40,7 @@ export async function hashFile(p: string) {
     const contents = await fs.promises.readFile(p);
     return crypto.createHash("sha256").update(contents).digest("hex");
 }
+
+export function rimraf(p: fs.PathLike) {
+    return fs.promises.rm(p, { recursive: true, force: true, maxRetries: process.platform === "win32" ? 10 : 0 });
+}
