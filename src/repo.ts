@@ -1,23 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { Command } from "clipanion";
-
 import { ensureDataDir, execa, tryStat, tsDir } from "./common.js";
 import { runInNode } from "./fnm.js";
 
 let repoCloned = false;
 
-export class Fetch extends Command {
-    static override paths = [[`fetch`]];
-
-    override async execute(): Promise<number | void> {
-        await ensureRepo();
-        await execa("git", ["fetch", "origin"], { cwd: tsDir });
-    }
-}
-
-async function ensureRepo() {
+export async function ensureRepo() {
     if (repoCloned) {
         return;
     }

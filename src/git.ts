@@ -1,7 +1,9 @@
 import { Command, type CommandClass, Option } from "clipanion";
 
 import { execa, tsDir } from "./common.js";
-import { build, cleanTypeScript } from "./repo.js";
+import { build, cleanTypeScript, ensureRepo } from "./repo.js";
+
+// TODO: add origin/ if needed
 
 async function isBisecting() {
     try {
@@ -43,5 +45,13 @@ export class Switch extends Command {
         await cleanTypeScript(true);
         await execa("git", ["switch", "--detach", this.ref], { cwd: tsDir });
         await build();
+    }
+}
+export class Fetch extends Command {
+    static override paths = [[`fetch`]];
+
+    override async execute(): Promise<number | void> {
+        await ensureRepo();
+        await execa("git", ["fetch", "--all", "--tags"], { cwd: tsDir });
     }
 }

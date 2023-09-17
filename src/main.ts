@@ -3,7 +3,7 @@ import "@cspotcode/source-map-support/register.js";
 import { Builtins, Cli } from "clipanion";
 
 import { bisectActionCommands, Switch } from "./git.js";
-import { Fetch } from "./repo.js";
+import { Fetch } from "./git.js";
 import { Tsc } from "./typescript.js";
 
 const cli = new Cli({

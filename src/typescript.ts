@@ -8,6 +8,7 @@ export class Tsc extends Command {
     args = Option.Proxy();
 
     override async execute(): Promise<number | void> {
-        await execa("node", [getTscPath(), ...this.args], { stdio: "inherit" });
+        const result = await execa("node", [getTscPath(), ...this.args], { stdio: "inherit", reject: false });
+        return result.exitCode;
     }
 }
