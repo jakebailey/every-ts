@@ -109,7 +109,15 @@ const buildFuncs = [
 async function tryBuildFns() {
     for (const fn of buildFuncs) {
         try {
-            // TODO: don't delete built too, for quicker bisects?
+            try {
+                await resetTypeScript("node_modules", "built");
+                await fixBuild();
+                await fn();
+                return;
+            } catch {
+                // console.log(e);
+            }
+
             await resetTypeScript("node_modules");
             await fixBuild();
             await fn();

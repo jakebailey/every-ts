@@ -1,7 +1,6 @@
 import { Command, type CommandClass, Option } from "clipanion";
-import { execa } from "execa";
 
-import { ensureDataDir, nodeModulesHashPath, rimraf, tryStat, tsDir } from "./common.js";
+import { ensureDataDir, execa, nodeModulesHashPath, rimraf, tryStat, tsDir } from "./common.js";
 import { build } from "./repo.js";
 
 // TODO: add origin/ if needed
@@ -14,7 +13,7 @@ export const bisectActionCommands: CommandClass[] = actions.map((action) => {
         args = Option.Proxy();
 
         override async execute(): Promise<number | void> {
-            await resetTypeScript("node_modules");
+            await resetTypeScript("node_modules", "built");
             await execa("git", ["bisect", action, ...this.args], { cwd: tsDir, stdio: "inherit" });
             await build();
         }
@@ -27,7 +26,7 @@ export class Switch extends Command {
     ref = Option.String();
 
     override async execute(): Promise<number | void> {
-        await resetTypeScript("node_modules");
+        await resetTypeScript("node_modules", "built");
         await execa("git", ["switch", "--detach", this.ref], { cwd: tsDir });
         await build();
     }
