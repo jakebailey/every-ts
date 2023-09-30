@@ -10,6 +10,11 @@ const actions = ["bad", "good", "skip", "new", "old", "start", "reset"];
 export const bisectActionCommands: CommandClass[] = actions.map((action) => {
     return class extends Command {
         static override paths: string[][] = [[`bisect`, action]];
+
+        static override usage = Command.Usage({
+            description: `git bisect ${action}`,
+        });
+
         args = Option.Proxy();
 
         override async execute(): Promise<number | void> {
