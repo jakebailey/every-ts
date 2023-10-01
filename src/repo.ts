@@ -107,7 +107,6 @@ const buildFuncs = [
     async () => {
         const buildCommand = await getBuildCommand();
         await runInNode("8", [buildCommand, "local"], { cwd: tsDir });
-        // await runInNode("8", ["npm", "run", "build:compiler"], { cwd: tsDir });
         await runInNode("8", [buildCommand, "LKG"], { cwd: tsDir });
     },
 ];
