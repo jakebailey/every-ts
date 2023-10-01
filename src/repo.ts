@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { execa, hashFile, nodeModulesHashPath, rimraf, tsDir } from "./common.js";
+import { buildCommitHashPath, execa, hashFile, nodeModulesHashPath, rimraf, tsDir } from "./common.js";
 import { runInNode } from "./fnm.js";
 import { ensureRepo, resetTypeScript } from "./git.js";
 
@@ -138,17 +138,36 @@ async function tryBuildFns() {
 async function tryBuild() {
     await ensureRepo();
 
-    if (!hasPackageLock() && fs.existsSync(path.join(tsDir, "node_modules"))) {
-        try {
-            await tryBuildFns();
+    const { stdout: commitHash } = await execa("git", ["rev-parse", "HEAD"], { cwd: tsDir });
+    try {
+        const contents = await fs.promises.readFile(buildCommitHashPath, "utf8");
+        if (contents === commitHash) {
             return;
-        } catch {
-            // console.log(e);
         }
+    } catch {
+        await rimraf(buildCommitHashPath);
     }
 
-    await tryInstall();
-    await tryBuildFns();
+    let succeeded = false;
+    try {
+        if (!hasPackageLock() && fs.existsSync(path.join(tsDir, "node_modules"))) {
+            try {
+                await tryBuildFns();
+                succeeded = true;
+                return;
+            } catch {
+                // ignore
+            }
+        }
+
+        await tryInstall();
+        await tryBuildFns();
+        succeeded = true;
+    } finally {
+        if (succeeded) {
+            await fs.promises.writeFile(buildCommitHashPath, commitHash, "utf8");
+        }
+    }
 }
 
 // TODO: maintain a file with the last commit hash that was built, like the package-lock.json hash

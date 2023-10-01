@@ -14,6 +14,7 @@ export const tsDir = path.join(dataDir, "TypeScript");
 export const fnmDir = path.join(dataDir, "fnm");
 export const fnmExe = path.join(fnmDir, process.platform === "win32" ? "fnm.exe" : "fnm");
 export const nodeModulesHashPath = path.join(dataDir, "node_modules.hash");
+export const buildCommitHashPath = path.join(dataDir, "builtCommit.hash");
 
 export async function tryStat(p: string) {
     try {

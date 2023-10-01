@@ -1,9 +1,11 @@
 import { Command, type CommandClass, Option } from "clipanion";
 
-import { ensureDataDir, execa, nodeModulesHashPath, rimraf, tryStat, tsDir } from "./common.js";
+import { buildCommitHashPath, ensureDataDir, execa, nodeModulesHashPath, rimraf, tryStat, tsDir } from "./common.js";
 import { build } from "./repo.js";
 
-const actions = ["bad", "good", "skip", "new", "old", "start", "reset", "terms", "visualize", "view", "replay", "log"];
+const actionsWithSideEffects = ["start", "reset", "bad", "good", "new", "old", "skip", "replay"];
+const actionsWithoutSideEffects = ["terms", "visualize", "view", "log"];
+const actions = [...actionsWithSideEffects, ...actionsWithoutSideEffects];
 
 export const bisectActionCommands: CommandClass[] = actions.map((action) => {
     return class extends Command {
@@ -23,12 +25,17 @@ export const bisectActionCommands: CommandClass[] = actions.map((action) => {
                 case "good":
                 case "new":
                 case "old":
-                    refs = await Promise.all(refs.map(fixRef));
+                case "skip":
+                    refs = await Promise.all(refs.map((r) => fixRef(r)));
                     break;
             }
 
             await ensureRepo();
-            await resetTypeScript("node_modules", "built");
+
+            if (await isBisecting() && actionsWithSideEffects.includes(action)) {
+                await resetTypeScript("node_modules", "built");
+            }
+
             await execa("git", ["bisect", action, ...refs], { cwd: tsDir, stdio: "inherit" });
             await build();
         }
@@ -94,6 +101,13 @@ export class Switch extends Command {
 
     override async execute(): Promise<number | void> {
         await ensureRepo();
+        const currentRef = await parseRef("HEAD");
+        const targetRef = await fixRef(this.ref, true);
+
+        if (currentRef === targetRef) {
+            return;
+        }
+
         await resetTypeScript("node_modules", "built");
         await execa("git", ["switch", "--detach", await fixRef(this.ref)], { cwd: tsDir, stdio: "inherit" });
         await build();
@@ -138,9 +152,10 @@ export async function resetTypeScript(...keep: string[]) {
     if (!keep?.includes("node_modules")) {
         await rimraf(nodeModulesHashPath);
     }
+    await rimraf(buildCommitHashPath);
 }
 
-async function fixRef(ref: string) {
+async function fixRef(ref: string, toHash = false) {
     const possibleRefs = [
         ref,
         `origin/${ref}`,
@@ -151,7 +166,10 @@ async function fixRef(ref: string) {
 
     for (const possibleRef of possibleRefs) {
         try {
-            await execa("git", ["rev-parse", possibleRef], { cwd: tsDir, stdio: "ignore" });
+            const hash = await parseRef(possibleRef);
+            if (toHash) {
+                return hash;
+            }
             return possibleRef;
         } catch {
             // ignore
@@ -159,4 +177,9 @@ async function fixRef(ref: string) {
     }
 
     throw new Error(`Could not find ref ${ref}`);
+}
+
+async function parseRef(ref: string) {
+    const { stdout } = await execa("git", ["rev-parse", ref], { cwd: tsDir });
+    return stdout;
 }
