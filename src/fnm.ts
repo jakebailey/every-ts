@@ -1,6 +1,7 @@
 import fs from "node:fs";
+import path from "node:path";
 
-import { ensureDataDir, execa, type ExecaOptions, ExitError, fnmDir, fnmExe, tryStat } from "./common.js";
+import { ensureDataDir, execa, type ExecaOptions, ExitError, fnmDir, tryStat } from "./common.js";
 
 type FnmPlatform = "arm32" | "arm64" | "linux" | "macos" | "windows";
 
@@ -57,10 +58,12 @@ export async function ensureFnm() {
     });
 
     if (process.platform !== "win32") {
+        const fnmExe = path.join(fnmDir, "fnm");
         await fs.promises.chmod(fnmExe, 0o755);
     }
 
     fnmInstalled = true;
+    process.env["PATH"] = `${fnmDir}${path.delimiter}${process.env["PATH"]}`;
 }
 
 const installedNode = new Set<string>();
@@ -68,7 +71,7 @@ const installedNode = new Set<string>();
 export async function runInNode(version: string, command: string[], opts?: ExecaOptions) {
     await ensureFnm();
     if (!installedNode.has(version)) {
-        await execa(fnmExe, ["install", version], { env: { FNM_DIR: fnmDir } });
+        await execa("fnm", ["install", version], { env: { FNM_DIR: fnmDir } });
         installedNode.add(version);
     }
 
@@ -77,7 +80,7 @@ export async function runInNode(version: string, command: string[], opts?: Execa
     // eslint-disable-next-line unicorn/consistent-function-scoping
     function run(command: string[], opts?: ExecaOptions) {
         return execa(
-            fnmExe,
+            "fnm",
             ["exec", `--using=${version}`, "--", ...command],
             {
                 ...opts,
