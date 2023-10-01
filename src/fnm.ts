@@ -60,20 +60,21 @@ export async function ensureFnm() {
     });
 
     if (process.platform !== "win32") {
-        const fnmExe = path.join(fnmDir, "fnm");
-        await fs.promises.chmod(fnmExe, 0o755);
+        await fs.promises.chmod(path.join(fnmDir, "fnm"), 0o755);
+        process.env["PATH"] = `${fnmDir}${path.delimiter}${process.env["PATH"]}`;
     }
 
     fnmInstalled = true;
-    process.env["PATH"] = `${fnmDir}${path.delimiter}${process.env["PATH"]}`;
 }
+
+const fnmExe = process.platform === "win32" ? path.join(fnmDir, "fnm.exe") : "fnm";
 
 const installedNode = new Set<string>();
 
 export async function runInNode(version: string, command: string[], opts?: ExecaOptions) {
     await ensureFnm();
     if (!installedNode.has(version)) {
-        await execa("fnm", ["install", version], { env: { FNM_DIR: fnmDir } });
+        await execa(fnmExe, ["install", version], { env: { FNM_DIR: fnmDir } });
         installedNode.add(version);
     }
 
@@ -82,7 +83,7 @@ export async function runInNode(version: string, command: string[], opts?: Execa
     // eslint-disable-next-line unicorn/consistent-function-scoping
     function run(command: string[], opts?: ExecaOptions) {
         return execa(
-            "fnm",
+            fnmExe,
             ["exec", `--using=${version}`, "--", ...command],
             {
                 ...opts,
