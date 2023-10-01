@@ -31,7 +31,7 @@ export async function ensureDataDir() {
 const verbose = true;
 
 export function execa(file: string, args?: readonly string[], options?: ExecaOptions) {
-    return _execa(file, args, { ...options, verbose });
+    return _execa(file, args, { verbose, ...options });
 }
 
 export { type Options as ExecaOptions } from "execa";
