@@ -3,7 +3,7 @@ import { Command, type CommandClass, Option } from "clipanion";
 import { ensureDataDir, execa, nodeModulesHashPath, rimraf, tryStat, tsDir } from "./common.js";
 import { build } from "./repo.js";
 
-const actions = ["bad", "good", "skip", "new", "old", "start", "reset"];
+const actions = ["bad", "good", "skip", "new", "old", "start", "reset", "terms", "visualize", "view", "replay", "log"];
 
 export const bisectActionCommands: CommandClass[] = actions.map((action) => {
     return class extends Command {
@@ -35,6 +35,58 @@ export const bisectActionCommands: CommandClass[] = actions.map((action) => {
     };
 });
 
+async function isBisecting() {
+    try {
+        const { stdout } = await execa("git", ["bisect", "log"], { cwd: tsDir });
+        const lines = stdout.split(/\r?\n/);
+        if (lines.some((v) => v.startsWith("# first "))) {
+            return false;
+        }
+        const actions = lines.filter((v) => !v.startsWith("#"));
+        return actions.length >= 3;
+    } catch {
+        return false;
+    }
+}
+
+export class BisectRun extends Command {
+    static override paths = [[`bisect`, `run`]];
+
+    static override usage = Command.Usage({
+        description: `git bisect run`,
+    });
+
+    args = Option.Proxy({ required: 1 });
+
+    override async execute(): Promise<number | void> {
+        await ensureRepo();
+
+        if (!await isBisecting()) {
+            throw new Error("Not bisecting");
+        }
+
+        const { stdout: termGood } = await execa("git", ["bisect", "terms", "--term-good"], { cwd: tsDir });
+        const { stdout: termBad } = await execa("git", ["bisect", "terms", "--term-bad"], { cwd: tsDir });
+
+        while (await isBisecting()) {
+            await resetTypeScript("node_modules", "built");
+            await build();
+
+            const result = await execa(this.args[0], this.args.slice(1), { reject: false, stdio: "inherit" });
+            await resetTypeScript("node_modules", "built");
+            if (result.exitCode === 0) {
+                await execa("git", ["bisect", termGood], { cwd: tsDir, stdio: "inherit" });
+            } else if (result.exitCode === 125) {
+                await execa("git", ["bisect", "skip"], { cwd: tsDir, stdio: "inherit" });
+            } else if (result.exitCode < 128) {
+                await execa("git", ["bisect", termBad], { cwd: tsDir, stdio: "inherit" });
+            } else {
+                throw result;
+            }
+        }
+    }
+}
+
 export class Switch extends Command {
     static override paths = [[`switch`]];
 
@@ -43,10 +95,11 @@ export class Switch extends Command {
     override async execute(): Promise<number | void> {
         await ensureRepo();
         await resetTypeScript("node_modules", "built");
-        await execa("git", ["switch", "--detach", await fixRef(this.ref)], { cwd: tsDir });
+        await execa("git", ["switch", "--detach", await fixRef(this.ref)], { cwd: tsDir, stdio: "inherit" });
         await build();
     }
 }
+
 export class Fetch extends Command {
     static override paths = [[`fetch`]];
 
@@ -66,8 +119,9 @@ export async function ensureRepo() {
     await ensureDataDir();
     const stat = await tryStat(tsDir);
     if (!stat?.isDirectory()) {
-        console.log("Cloning TypeScript...");
-        await execa("git", ["clone", "--filter=blob:none", "https://github.com/microsoft/TypeScript.git", tsDir]);
+        await execa("git", ["clone", "--filter=blob:none", "https://github.com/microsoft/TypeScript.git", tsDir], {
+            stdio: "inherit",
+        });
     }
 
     repoCloned = true;

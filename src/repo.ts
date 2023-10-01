@@ -151,6 +151,7 @@ async function tryBuild() {
     await tryBuildFns();
 }
 
+// TODO: maintain a file with the last commit hash that was built, like the package-lock.json hash
 export async function build() {
     await tryBuild();
     await execa("node", [getTscPath(), "--version"], { stdout: "ignore" });
