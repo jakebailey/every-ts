@@ -8,6 +8,9 @@
     "author": "Jake Bailey",
     "license": "MIT",
     "preferUnplugged": true,
+    "files": [
+        "dist"
+    ],
     "dependencies": {
         "@cspotcode/source-map-support": "^0.8.1",
         "adm-zip": "^0.5.10",
