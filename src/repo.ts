@@ -7,16 +7,22 @@ import { ensureRepo, resetTypeScript } from "./git.js";
 
 async function getBuildCommand() {
     const dir = await fs.promises.readdir(tsDir);
+    let name;
     if (dir.some((v) => v.includes("Herebyfile"))) {
-        return "hereby";
+        name = "hereby";
+    } else if (dir.some((v) => v.includes("Jakefile"))) {
+        name = "jake";
+    } else if (dir.some((v) => v.includes("Gulpfile"))) {
+        name = "gulp";
+    } else {
+        throw new Error("build command unknown");
     }
-    if (dir.some((v) => v.includes("Jakefile"))) {
-        return "jake";
+
+    if (process.platform === "win32") {
+        name += ".cmd";
     }
-    if (dir.some((v) => v.includes("Gulpfile"))) {
-        return "gulp";
-    }
-    throw new Error("build command unknown");
+
+    return path.join("node_modules", ".bin", name);
 }
 
 async function getCommitDate() {
@@ -95,14 +101,14 @@ async function fixBuild() {
 const buildFuncs = [
     async () => {
         const buildCommand = await getBuildCommand();
-        await runInNode("20", ["npx", buildCommand, "local"], { cwd: tsDir });
-        await runInNode("20", ["npx", buildCommand, "LKG"], { cwd: tsDir });
+        await runInNode("20", [buildCommand, "local"], { cwd: tsDir });
+        await runInNode("20", [buildCommand, "LKG"], { cwd: tsDir });
     },
     async () => {
         const buildCommand = await getBuildCommand();
-        await runInNode("8", ["npx", buildCommand, "local"], { cwd: tsDir });
+        await runInNode("8", [buildCommand, "local"], { cwd: tsDir });
         // await runInNode("8", ["npm", "run", "build:compiler"], { cwd: tsDir });
-        await runInNode("8", ["npx", buildCommand, "LKG"], { cwd: tsDir });
+        await runInNode("8", [buildCommand, "LKG"], { cwd: tsDir });
     },
 ];
 
