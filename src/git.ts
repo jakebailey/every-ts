@@ -18,6 +18,7 @@ export const bisectActionCommands: CommandClass[] = actions.map((action) => {
         args = Option.Proxy();
 
         override async execute(): Promise<number | void> {
+            await ensureRepo();
             await resetTypeScript("node_modules", "built");
             await execa("git", ["bisect", action, ...this.args], { cwd: tsDir, stdio: "inherit" });
             await build();
@@ -31,6 +32,7 @@ export class Switch extends Command {
     ref = Option.String();
 
     override async execute(): Promise<number | void> {
+        await ensureRepo();
         await resetTypeScript("node_modules", "built");
         await execa("git", ["switch", "--detach", this.ref], { cwd: tsDir });
         await build();
