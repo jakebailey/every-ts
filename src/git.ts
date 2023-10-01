@@ -1,6 +1,16 @@
 import { Command, type CommandClass, Option } from "clipanion";
 
-import { buildCommitHashPath, ensureDataDir, execa, nodeModulesHashPath, rimraf, tryStat, tsDir } from "./common.js";
+import {
+    BaseCommand,
+    buildCommitHashPath,
+    ensureDataDir,
+    execa,
+    ExitError,
+    nodeModulesHashPath,
+    rimraf,
+    tryStat,
+    tsDir,
+} from "./common.js";
 import { build } from "./repo.js";
 
 const actionsWithSideEffects = ["start", "reset", "bad", "good", "new", "old", "skip", "replay"];
@@ -8,7 +18,7 @@ const actionsWithoutSideEffects = ["terms", "visualize", "view", "log"];
 const actions = [...actionsWithSideEffects, ...actionsWithoutSideEffects];
 
 export const bisectActionCommands: CommandClass[] = actions.map((action) => {
-    return class extends Command {
+    return class extends BaseCommand {
         static override paths: string[][] = [[`bisect`, action]];
 
         static override usage = Command.Usage({
@@ -56,7 +66,7 @@ async function isBisecting() {
     }
 }
 
-export class BisectRun extends Command {
+export class BisectRun extends BaseCommand {
     static override paths = [[`bisect`, `run`]];
 
     static override usage = Command.Usage({
@@ -69,7 +79,7 @@ export class BisectRun extends Command {
         await ensureRepo();
 
         if (!await isBisecting()) {
-            throw new Error("Not bisecting");
+            throw new ExitError("Not bisecting");
         }
 
         const { stdout: termGood } = await execa("git", ["bisect", "terms", "--term-good"], { cwd: tsDir });
@@ -94,7 +104,7 @@ export class BisectRun extends Command {
     }
 }
 
-export class Switch extends Command {
+export class Switch extends BaseCommand {
     static override paths = [[`switch`]];
 
     ref = Option.String();
@@ -114,7 +124,7 @@ export class Switch extends Command {
     }
 }
 
-export class Fetch extends Command {
+export class Fetch extends BaseCommand {
     static override paths = [[`fetch`]];
 
     override async execute(): Promise<number | void> {
@@ -176,7 +186,7 @@ async function fixRef(ref: string, toHash = false) {
         }
     }
 
-    throw new Error(`Could not find ref ${ref}`);
+    throw new ExitError(`Could not find ref ${ref}`);
 }
 
 async function parseRef(ref: string) {

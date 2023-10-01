@@ -1,9 +1,9 @@
-import { Command, Option } from "clipanion";
+import { Option } from "clipanion";
 
-import { execa } from "./common.js";
+import { BaseCommand, execa } from "./common.js";
 import { getTscPath } from "./repo.js";
 
-export class Tsc extends Command {
+export class Tsc extends BaseCommand {
     static override paths: string[][] = [[`tsc`]];
     args = Option.Proxy();
 

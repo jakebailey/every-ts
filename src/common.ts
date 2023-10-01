@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import url from "node:url";
 
+import { Command } from "clipanion";
 import { execa as _execa, type Options as ExecaOptions } from "execa";
 
 const __filename = url.fileURLToPath(new URL(import.meta.url));
@@ -44,4 +45,22 @@ export async function hashFile(p: string) {
 
 export function rimraf(p: fs.PathLike) {
     return fs.promises.rm(p, { recursive: true, force: true, maxRetries: process.platform === "win32" ? 10 : 0 });
+}
+
+export class ExitError extends Error {
+    constructor(message: string, public readonly exitCode = 1) {
+        super(message);
+    }
+}
+
+export abstract class BaseCommand extends Command {
+    // verbose = Option.Boolean(`-v,--verbose`, false, { description: `Print verbose output` });
+
+    override catch(error: any): Promise<void> {
+        if (error instanceof ExitError) {
+            this.context.stderr.write(`${error.message}\n`);
+            return Promise.resolve<any>(error.exitCode);
+        }
+        return super.catch(error);
+    }
 }

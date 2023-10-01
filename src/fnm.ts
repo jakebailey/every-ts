@@ -1,6 +1,6 @@
 import fs from "node:fs";
 
-import { ensureDataDir, execa, type ExecaOptions, fnmDir, fnmExe, tryStat } from "./common.js";
+import { ensureDataDir, execa, type ExecaOptions, ExitError, fnmDir, fnmExe, tryStat } from "./common.js";
 
 type FnmPlatform = "arm32" | "arm64" | "linux" | "macos" | "windows";
 
@@ -21,7 +21,7 @@ function getPlatform(): FnmPlatform {
             }
     }
 
-    throw new Error(`Unsupported system ${process.platform} ${process.arch}`);
+    throw new ExitError(`Unsupported system ${process.platform} ${process.arch}`);
 }
 
 let fnmInstalled = false;

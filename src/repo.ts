@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { buildCommitHashPath, execa, hashFile, nodeModulesHashPath, rimraf, tsDir } from "./common.js";
+import { buildCommitHashPath, execa, ExitError, hashFile, nodeModulesHashPath, rimraf, tsDir } from "./common.js";
 import { runInNode } from "./fnm.js";
 import { ensureRepo, resetTypeScript } from "./git.js";
 
@@ -15,7 +15,7 @@ async function getBuildCommand() {
     } else if (dir.some((v) => v.includes("Gulpfile"))) {
         name = "gulp";
     } else {
-        throw new Error("build command unknown");
+        throw new ExitError("build command unknown");
     }
 
     if (process.platform === "win32") {
@@ -132,7 +132,7 @@ async function tryBuildFns() {
             // console.log(e);
         }
     }
-    throw new Error("could not build TypeScript");
+    throw new ExitError("could not build TypeScript");
 }
 
 async function tryBuild() {
