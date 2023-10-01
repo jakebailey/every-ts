@@ -8,6 +8,13 @@
     "author": "Jake Bailey",
     "license": "MIT",
     "preferUnplugged": true,
+    "dependencies": {
+        "@cspotcode/source-map-support": "^0.8.1",
+        "adm-zip": "^0.5.10",
+        "clipanion": "4.0.0-rc.2",
+        "execa": "^7.2.0",
+        "node-fetch": "^3.3.2"
+    },
     "devDependencies": {
         "@tsconfig/node12": "^12.1.0",
         "@types/adm-zip": "^0.5.2",
@@ -20,13 +27,6 @@
         "eslint-plugin-unicorn": "^48.0.1",
         "rimraf": "^5.0.5",
         "typescript": "^5.2.2"
-    },
-    "dependencies": {
-        "@cspotcode/source-map-support": "^0.8.1",
-        "adm-zip": "^0.5.10",
-        "clipanion": "4.0.0-rc.2",
-        "execa": "^7.2.0",
-        "node-fetch": "^3.3.2"
     },
     "scripts": {
         "build": "tsc",
