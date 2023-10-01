@@ -84,6 +84,7 @@ async function fixBuild() {
     // Early builds of TS were produced on a case-insensitive file system; confusingly
     // the input and output files plus the build config were inconsistent, so we need
     // to fix them up.
+    // Not including Gulpfile.mjs; the problem was fixed before that was added.
     for (const file of ["Jakefile.js", "Gulpfile.ts", "Gulpfile.js"]) {
         const p = path.join(tsDir, file);
         if (!fs.existsSync(p)) {
