@@ -147,8 +147,7 @@ async function tryBuild() {
 
 export async function build() {
     await tryBuild();
-    await execa("node", [getTscPath(), "--version"], { stdout: "inherit" });
-    console.log("TypeScript built successfully!");
+    await execa("node", [getTscPath(), "--version"], { stdout: "ignore" });
 }
 
 export function getTscPath() {
