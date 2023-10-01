@@ -1,7 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { buildCommitHashPath, execa, ExitError, hashFile, nodeModulesHashPath, rimraf, tsDir } from "./common.js";
+import { execa } from "execa";
+
+import { buildCommitHashPath, ExitError, hashFile, nodeModulesHashPath, rimraf, tsDir } from "./common.js";
 import { runInNode } from "./fnm.js";
 import { ensureRepo, resetTypeScript } from "./git.js";
 

@@ -1,7 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { ensureDataDir, execa, type ExecaOptions, ExitError, fnmDir, tryStat } from "./common.js";
+import { execa, type Options as ExecaOptions } from "execa";
+
+import { ensureDataDir, ExitError, fnmDir, tryStat } from "./common.js";
 
 type FnmPlatform = "arm32" | "arm64" | "linux" | "macos" | "windows";
 

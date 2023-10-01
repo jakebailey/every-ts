@@ -4,5 +4,12 @@
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
     },
-    "typescript.tsdk": "node_modules/typescript/lib"
+
+    // These options search the repo recursively and slow down
+    // the build task menu. We define our own in tasks.json.
+    "typescript.tsc.autoDetect": "off",
+    "npm.autoDetect": "off",
+    "grunt.autoDetect": "off",
+    "jake.autoDetect": "off",
+    "gulp.autoDetect": "off"
 }

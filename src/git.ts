@@ -1,10 +1,10 @@
 import { Command, type CommandClass, Option } from "clipanion";
+import { execa } from "execa";
 
 import {
     BaseCommand,
     buildCommitHashPath,
     ensureDataDir,
-    execa,
     ExitError,
     nodeModulesHashPath,
     rimraf,

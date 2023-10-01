@@ -4,7 +4,6 @@ import path from "node:path";
 import url from "node:url";
 
 import { Command } from "clipanion";
-import { execa as _execa, type Options as ExecaOptions } from "execa";
 
 const __filename = url.fileURLToPath(new URL(import.meta.url));
 const __dirname = path.dirname(__filename);
@@ -28,15 +27,6 @@ export async function ensureDataDir() {
     await fs.promises.mkdir(dataDir, { recursive: true });
 }
 
-// TODO: make a flag?
-const verbose = true;
-
-export function execa(file: string, args?: readonly string[], options?: ExecaOptions) {
-    return _execa(file, args, { verbose, ...options });
-}
-
-export { type Options as ExecaOptions } from "execa";
-
 export async function hashFile(p: string) {
     const contents = await fs.promises.readFile(p);
     return crypto.createHash("sha256").update(contents).digest("hex");
@@ -53,8 +43,6 @@ export class ExitError extends Error {
 }
 
 export abstract class BaseCommand extends Command {
-    // verbose = Option.Boolean(`-v,--verbose`, false, { description: `Print verbose output` });
-
     override catch(error: any): Promise<void> {
         if (error instanceof ExitError) {
             this.context.stderr.write(`${error.message}\n`);
