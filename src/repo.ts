@@ -137,7 +137,7 @@ async function tryBuildFns() {
     throw new ExitError("could not build TypeScript");
 }
 
-async function tryBuild() {
+export async function ensureBuilt() {
     await ensureRepo();
 
     const { stdout: commitHash } = await execa("git", ["rev-parse", "HEAD"], { cwd: tsDir });
@@ -174,7 +174,7 @@ async function tryBuild() {
 
 // TODO: maintain a file with the last commit hash that was built, like the package-lock.json hash
 export async function build() {
-    await tryBuild();
+    await ensureBuilt();
     await execa("node", [getTscPath(), "--version"], { stdout: "ignore" });
 }
 
