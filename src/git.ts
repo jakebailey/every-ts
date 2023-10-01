@@ -151,7 +151,7 @@ async function fixRef(ref: string) {
 
     for (const possibleRef of possibleRefs) {
         try {
-            await execa("git", ["rev-parse", possibleRef], { cwd: tsDir, stdio: "ignore", verbose: false });
+            await execa("git", ["rev-parse", possibleRef], { cwd: tsDir, stdio: "ignore" });
             return possibleRef;
         } catch {
             // ignore
