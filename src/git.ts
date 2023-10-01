@@ -167,11 +167,11 @@ export async function resetTypeScript(...keep: string[]) {
 
 async function fixRef(ref: string, toHash = false) {
     const possibleRefs = [
-        ref,
         `origin/${ref}`,
         `release-${ref}`,
         `origin/release-${ref}`,
         `v${ref}`,
+        ref, // Try this last, so we refer to newer fetched refs first.
     ];
 
     for (const possibleRef of possibleRefs) {
