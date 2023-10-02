@@ -152,7 +152,7 @@ async function ensureBuiltWorker() {
     try {
         const contents = await fs.promises.readFile(buildCommitHashPath, `utf8`);
         if (contents === commitHash) {
-            return;
+            return false;
         }
     } catch {
         await rimraf(buildCommitHashPath);
@@ -164,7 +164,7 @@ async function ensureBuiltWorker() {
             try {
                 await tryBuildFns();
                 succeeded = true;
-                return;
+                return true;
             } catch {
                 // ignore
             }
@@ -173,6 +173,7 @@ async function ensureBuiltWorker() {
         await tryInstall();
         await tryBuildFns();
         succeeded = true;
+        return true;
     } finally {
         if (succeeded) {
             await fs.promises.writeFile(buildCommitHashPath, commitHash, `utf8`);
@@ -184,17 +185,19 @@ async function ensureBuiltWorker() {
 export async function ensureBuilt() {
     await ensureRepo();
     try {
-        await ensureBuiltWorker();
-        const paths = getPaths();
-        await execa(`node`, [paths.tsc, `--version`], { stdout: `ignore` }); // TODO: needed?
+        const didBuild = await ensureBuiltWorker();
+        if (didBuild) {
+            const paths = getPaths();
+            await execa(`node`, [paths.tsc, `--version`], { stdout: `ignore` }); // TODO: needed?
 
-        await rimraf(binDir);
-        await fs.promises.mkdir(binDir, { recursive: true });
-        const tscBin = path.join(binDir, `tsc`);
-        const tsserverBin = path.join(binDir, `tsserver`);
+            await rimraf(binDir);
+            await fs.promises.mkdir(binDir, { recursive: true });
+            const tscBin = path.join(binDir, `tsc`);
+            const tsserverBin = path.join(binDir, `tsserver`);
 
-        await cmdShim.ifExists(paths.tsc, tscBin);
-        await cmdShim.ifExists(paths.tsserver, tsserverBin);
+            await cmdShim.ifExists(paths.tsc, tscBin);
+            await cmdShim.ifExists(paths.tsserver, tsserverBin);
+        }
     } catch {
         throw new Error(`Unable to build typescript at rev ${await revParse(`HEAD`)}; please file a bug!`);
     }
