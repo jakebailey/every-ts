@@ -1,11 +1,14 @@
 import { Builtins, Cli } from "clipanion";
 
+import { getPackageVersion } from "./common.js";
 import { Bisect, BisectRun, Switch } from "./git.js";
 import { Fetch } from "./git.js";
 import { Tsc } from "./typescript.js";
 
 const cli = new Cli({
+    binaryLabel: `every-ts`,
     binaryName: `every-ts`,
+    binaryVersion: getPackageVersion(),
     enableCapture: true,
 });
 

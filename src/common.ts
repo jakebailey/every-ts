@@ -15,6 +15,10 @@ export const fnmDir = path.join(dataDir, `fnm`);
 export const nodeModulesHashPath = path.join(dataDir, `node_modules.hash`);
 export const buildCommitHashPath = path.join(dataDir, `builtCommit.hash`);
 
+export function getPackageVersion() {
+    return JSON.parse(fs.readFileSync(path.join(packageRoot, `package.json`), `utf8`)).version;
+}
+
 export async function tryStat(p: string) {
     try {
         return await fs.promises.stat(p);
