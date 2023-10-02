@@ -1,7 +1,8 @@
 # every-ts
 
 `every-ts` is a utility that can build _any_ version of TypeScript. Yes, that's
-right, any version, even back to 1.0.3.
+right, any version, any commit, even main, v1.0.3, or in between. (If it breaks,
+let me know!)
 
 `every-ts` can also be used to bisect TypeScript, without needing to know
 anything about TypeScript's build process.
