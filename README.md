@@ -17,9 +17,9 @@ them.
 ## Switching versions
 
 To switch versions, use `every-ts switch <rev>`. This rev can be anything that
-`git` accepts. If `<rev>` isn't found, `origin/<rev>` and `origin/release-<rev>`
-will also be tried. You may also pass in a `-dev` version, which will be
-resolved to the commit that generated that nightly build.
+`git` accepts. If `<rev>` isn't found, `origin/<rev>`, `origin/release-<rev>`,
+and `v<rev>` will also be tried. You may also pass in a `-dev` version, which
+will be resolved to the commit that generated that nightly build.
 
 ```
 $ every-ts switch main                # Switches to `origin/main`
