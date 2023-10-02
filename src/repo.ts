@@ -199,7 +199,7 @@ export async function ensureBuilt() {
             await cmdShim.ifExists(paths.tsserver, tsserverBin);
         }
     } catch {
-        throw new Error(`Unable to build typescript at rev ${await revParse(`HEAD`)}; please file a bug!`);
+        throw new ExitError(`Unable to build typescript at rev ${await revParse(`HEAD`)}; please file a bug!`);
     }
 }
 
