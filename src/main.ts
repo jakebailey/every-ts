@@ -5,7 +5,7 @@ import { Fetch } from "./git.js";
 import { Tsc } from "./typescript.js";
 
 const cli = new Cli({
-    binaryName: "ts-bisect",
+    binaryName: "every-ts",
     enableCapture: true,
 });
 
