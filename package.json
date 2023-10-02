@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "author": "Jake Bailey",
     "license": "MIT",
-    "description": "A CLI to build any version of TypeScript",
+    "description": "A CLI to build and bisect any version of TypeScript",
     "keywords": [],
     "repository": "github:jakebailey/every-ts",
     "type": "module",
