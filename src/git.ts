@@ -26,7 +26,7 @@ export class Bisect extends BaseCommand {
     args = Option.Proxy();
 
     override async execute(): Promise<number | void> {
-        let refs = [...this.args];
+        let revs = [...this.args];
 
         switch (this.subcommand) {
             case "bad":
@@ -34,7 +34,7 @@ export class Bisect extends BaseCommand {
             case "new":
             case "old":
             case "skip":
-                refs = await Promise.all(refs.map((r) => fixRef(r)));
+                revs = await Promise.all(revs.map((r) => findRev(r)));
                 break;
         }
 
@@ -44,7 +44,7 @@ export class Bisect extends BaseCommand {
             await resetTypeScript("node_modules", "built");
         }
 
-        await execa("git", ["bisect", this.subcommand, ...refs], { cwd: tsDir, stdio: "inherit" });
+        await execa("git", ["bisect", this.subcommand, ...revs], { cwd: tsDir, stdio: "inherit" });
         await build();
     }
 }
@@ -104,19 +104,19 @@ export class BisectRun extends BaseCommand {
 export class Switch extends BaseCommand {
     static override paths = [[`switch`]];
 
-    ref = Option.String();
+    rev = Option.String();
 
     override async execute(): Promise<number | void> {
         await ensureRepo();
-        const currentRef = await parseRef("HEAD");
-        const targetRef = await fixRef(this.ref, true);
+        const current = await revParse("HEAD");
+        const target = await findRev(this.rev, true);
 
-        if (currentRef === targetRef) {
+        if (current === target) {
             return;
         }
 
         await resetTypeScript("node_modules", "built");
-        await execa("git", ["switch", "--detach", await fixRef(this.ref)], { cwd: tsDir, stdio: "inherit" });
+        await execa("git", ["switch", "--detach", await findRev(this.rev)], { cwd: tsDir, stdio: "inherit" });
         await build();
     }
 }
@@ -162,32 +162,32 @@ export async function resetTypeScript(...keep: string[]) {
     await rimraf(buildCommitHashPath);
 }
 
-async function fixRef(ref: string, toHash = false) {
-    const possibleRefs = [
-        `origin/${ref}`,
-        `release-${ref}`,
-        `origin/release-${ref}`,
-        `v${ref}`,
-        ref, // Try this last, so we refer to newer fetched refs first.
+async function findRev(rev: string, toHash = false) {
+    const cancidates = [
+        `origin/${rev}`,
+        `release-${rev}`,
+        `origin/release-${rev}`,
+        `v${rev}`,
+        rev, // Try this last, so we refer to newer fetched revs first.
     ];
 
-    for (const possibleRef of possibleRefs) {
+    for (const candidate of cancidates) {
         try {
-            const hash = await parseRef(possibleRef);
+            const hash = await revParse(candidate);
             if (toHash) {
                 return hash;
             }
-            // TODO: log a message that shows that we fixed this ref
-            return possibleRef;
+            console.log(`Converted ${rev} to ${candidate}`);
+            return candidate;
         } catch {
             // ignore
         }
     }
 
-    throw new ExitError(`Could not find ref ${ref}`);
+    throw new ExitError(`Could not find ${rev}`);
 }
 
-async function parseRef(ref: string) {
-    const { stdout } = await execa("git", ["rev-parse", ref], { cwd: tsDir });
+async function revParse(rev: string) {
+    const { stdout } = await execa("git", ["rev-parse", rev], { cwd: tsDir });
     return stdout;
 }

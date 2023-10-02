@@ -15,8 +15,8 @@ them.
 
 # Switching versions
 
-To switch versions, use `every-ts switch <ref>`. This ref can be anything that
-`git` accepts. If `<ref>` isn't found, `origin/<ref>` and `origin/release-<ref>`
+To switch versions, use `every-ts switch <rev>`. This rev can be anything that
+`git` accepts. If `<rev>` isn't found, `origin/<rev>` and `origin/release-<rev>`
 will also be tried.
 
 ```
