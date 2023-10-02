@@ -13,7 +13,7 @@ building it. The way to build TypeScript has changed over the years (even places
 which don't build with modern Node!), and `every-ts` knows how to build any of
 them.
 
-# Switching versions
+## Switching versions
 
 To switch versions, use `every-ts switch <rev>`. This rev can be anything that
 `git` accepts. If `<rev>` isn't found, `origin/<rev>` and `origin/release-<rev>`
@@ -29,7 +29,7 @@ $ every-ts switch v1.1                # Switches the tag `v1.1`
 $ every-ts switch 5.3.0-dev.20231001  # Switches to the 20231001 nightly build
 ```
 
-# Running `tsc`
+## Running `tsc`
 
 To invoke `tsc`, run `every-ts tsc`:
 
@@ -55,7 +55,7 @@ Version 5.3.0-dev
 $ every-ts exec tsc -p ./path/to/tsconfig.json
 ```
 
-# Bisecting
+## Bisecting
 
 `every-ts` wraps `git bisect`, building TypeScript automatically. To use it, run
 `every-ts bisect` just like you would `git bisect`:
