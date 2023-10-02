@@ -206,9 +206,13 @@ export async function ensureBuilt() {
 }
 
 export function getPaths() {
-    const libTsc = path.join(tsDir, `lib`, `tsc.js`);
-    const binTsc = path.join(tsDir, `bin`, `tsc.js`);
-    const tsc = fs.existsSync(libTsc) ? libTsc : binTsc;
-    const tsserver = path.join(path.dirname(tsc), `tsserver.js`);
-    return { tsc, tsserver };
+    const baseDir = fs.existsSync(path.join(tsDir, `lib`, `tsc.js`))
+        ? path.join(tsDir, `lib`)
+        : path.join(tsDir, `bin`);
+
+    return {
+        baseDir,
+        tsc: path.join(baseDir, `tsc.js`),
+        tsserver: path.join(baseDir, `tsserver.js`),
+    };
 }

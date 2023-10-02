@@ -56,6 +56,19 @@ Version 5.3.0-dev
 $ every-ts exec tsc -p ./path/to/tsconfig.json
 ```
 
+## Using with VS Code
+
+To get a working path to use with VS Code, run `every-ts tsdk` to get the option
+to add to `settings.json`:
+
+```
+$ every-ts tsdk
+"typescript.tsdk": "/home/jabaile/work/every-ts/.data/TypeScript/lib"
+```
+
+Remember, you still need to use the "Select TypeScript Version" command to make
+this active. The setting itself is not enough.
+
 ## Bisecting
 
 `every-ts` wraps `git bisect`, building TypeScript automatically. To use it, run

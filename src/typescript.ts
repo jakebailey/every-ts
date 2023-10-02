@@ -21,6 +21,22 @@ export class Tsc extends BaseCommand {
     }
 }
 
+export class Tsdk extends BaseCommand {
+    static override paths: string[][] = [[`tsdk`]];
+
+    static override usage = Command.Usage({
+        description: `Gets the path for use with VS Code's "typescript.tsdk" option.`,
+    });
+
+    args = Option.Proxy();
+
+    override async execute(): Promise<number | void> {
+        await ensureBuilt();
+        const { baseDir } = getPaths();
+        console.log(`"typescript.tsdk": ${JSON.stringify(baseDir)}`);
+    }
+}
+
 export class Exec extends BaseCommand {
     static override paths: string[][] = [[`exec`]];
 
