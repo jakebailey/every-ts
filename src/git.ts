@@ -15,7 +15,8 @@ import {
 } from "./common.js";
 import { build } from "./repo.js";
 
-const actionsWithSideEffects = new Set([`start`, `reset`, `bad`, `good`, `new`, `old`, `skip`, `replay`]);
+const actionsAcceptingRevs = new Set([`start`, `bad`, `good`, `new`, `old`, `skip`]);
+const actionsWithSideEffects = new Set([`reset`, `replay`, ...actionsAcceptingRevs]);
 
 export class Bisect extends BaseCommand {
     static override paths = [[`bisect`]];
@@ -28,16 +29,25 @@ export class Bisect extends BaseCommand {
     args = Option.Proxy();
 
     override async execute(): Promise<number | void> {
-        let revs = [...this.args];
+        let startArgs: string[] = [];
+        let revs;
+        let endArgs: string[] = [];
 
-        switch (this.subcommand) {
-            case `bad`:
-            case `good`:
-            case `new`:
-            case `old`:
-            case `skip`:
-                revs = await Promise.all(revs.map((r) => findRev(r)));
-                break;
+        const dashDashIndex = this.args.indexOf(`--`);
+        if (this.subcommand === `start` && dashDashIndex !== -1) {
+            endArgs = this.args.slice(dashDashIndex);
+            revs = this.args.slice(0, dashDashIndex);
+            const nonFlagIndex = revs.findIndex((v) => !v.startsWith(`--`));
+            if (nonFlagIndex !== -1) {
+                startArgs = revs.slice(0, nonFlagIndex);
+                revs = revs.slice(nonFlagIndex);
+            }
+        } else {
+            revs = [...this.args];
+        }
+
+        if (actionsAcceptingRevs.has(this.subcommand)) {
+            revs = await Promise.all(revs.map((r) => findRev(r)));
         }
 
         await ensureRepo();
@@ -46,7 +56,14 @@ export class Bisect extends BaseCommand {
             await resetTypeScript(`node_modules`, `built`);
         }
 
-        await execa(`git`, [`bisect`, this.subcommand, ...revs], { cwd: tsDir, stdio: `inherit` });
+        const result = await execa(
+            `git`,
+            [`bisect`, this.subcommand, ...startArgs, ...revs, ...endArgs],
+            { cwd: tsDir, stdio: `inherit`, reject: false },
+        );
+        if (result.exitCode !== 0) {
+            return result.exitCode;
+        }
         await build();
     }
 }
@@ -88,16 +105,22 @@ export class BisectRun extends BaseCommand {
             await resetTypeScript(`node_modules`, `built`);
             await build();
 
-            const result = await execa(this.args[0], this.args.slice(1), { reject: false, stdio: `inherit` });
+            const result = await execa(this.args[0], this.args.slice(1), { stdio: `inherit`, reject: false });
             await resetTypeScript(`node_modules`, `built`);
+
+            let bResult;
             if (result.exitCode === 0) {
-                await execa(`git`, [`bisect`, termGood], { cwd: tsDir, stdio: `inherit` });
+                bResult = await execa(`git`, [`bisect`, termGood], { cwd: tsDir, stdio: `inherit`, reject: false });
             } else if (result.exitCode === 125) {
-                await execa(`git`, [`bisect`, `skip`], { cwd: tsDir, stdio: `inherit` });
+                bResult = await execa(`git`, [`bisect`, `skip`], { cwd: tsDir, stdio: `inherit`, reject: false });
             } else if (result.exitCode < 128) {
-                await execa(`git`, [`bisect`, termBad], { cwd: tsDir, stdio: `inherit` });
+                bResult = await execa(`git`, [`bisect`, termBad], { cwd: tsDir, stdio: `inherit`, reject: false });
             } else {
                 throw result;
+            }
+
+            if (bResult.exitCode !== 0) {
+                return bResult.exitCode;
             }
         }
     }
@@ -122,7 +145,14 @@ export class Switch extends BaseCommand {
         }
 
         await resetTypeScript(`node_modules`, `built`);
-        await execa(`git`, [`switch`, `--detach`, target], { cwd: tsDir, stdio: `inherit` });
+        const result = await execa(`git`, [`switch`, `--detach`, target], {
+            cwd: tsDir,
+            stdio: `inherit`,
+            reject: false,
+        });
+        if (result.exitCode !== 0) {
+            return result.exitCode;
+        }
         await build();
     }
 }
