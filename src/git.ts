@@ -188,12 +188,16 @@ export async function ensureRepo() {
         return;
     }
 
+    console.log(`Cloning TypeScript; this may take a bit...`);
+
     await ensureDataDir();
     const stat = await tryStat(tsDir);
     if (!stat?.isDirectory()) {
-        await execa(`git`, [`clone`, `--filter=blob:none`, `https://github.com/microsoft/TypeScript.git`, tsDir], {
-            stdio: `inherit`,
-        });
+        await execa(
+            `git`,
+            [`clone`, `--filter=blob:none`, `https://github.com/microsoft/TypeScript.git`, tsDir],
+            { stdio: `inherit` },
+        );
     }
 
     repoCloned = true;

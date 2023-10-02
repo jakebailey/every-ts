@@ -158,6 +158,8 @@ async function ensureBuiltWorker() {
         await rimraf(buildCommitHashPath);
     }
 
+    console.log(`Building TypeScript...`);
+
     let succeeded = false;
     try {
         if (!hasPackageLock() && fs.existsSync(path.join(tsDir, `node_modules`))) {
