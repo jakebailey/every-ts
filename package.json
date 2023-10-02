@@ -1,12 +1,13 @@
 {
-    "name": "ts-bisect",
+    "name": "every-ts",
     "version": "0.0.1",
-    "description": "",
-    "type": "module",
-    "bin": "dist/main.js",
-    "keywords": [],
     "author": "Jake Bailey",
     "license": "MIT",
+    "description": "A CLI to build any version of TypeScript",
+    "keywords": [],
+    "repository": "github:jakebailey/every-ts",
+    "type": "module",
+    "bin": "dist/main.js",
     "preferUnplugged": true,
     "files": [
         "dist"
@@ -19,7 +20,7 @@
         "node-fetch": "^3.3.2"
     },
     "devDependencies": {
-        "@tsconfig/node12": "^12.1.0",
+        "@tsconfig/node14": "^14.1.0",
         "@types/adm-zip": "^0.5.2",
         "@types/node": "^20.8.0",
         "@typescript-eslint/eslint-plugin": "^6.7.3",
@@ -35,5 +36,8 @@
         "build": "tsc",
         "watch": "tsc --watch",
         "prepack": "rimraf dist && npm run build"
+    },
+    "engines": {
+        "node": ">= 14.18"
     }
 }

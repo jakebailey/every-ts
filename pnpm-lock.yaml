@@ -22,9 +22,9 @@ dependencies:
     version: 3.3.2
 
 devDependencies:
-  '@tsconfig/node12':
-    specifier: ^12.1.0
-    version: 12.1.0
+  '@tsconfig/node14':
+    specifier: ^14.1.0
+    version: 14.1.0
   '@types/adm-zip':
     specifier: ^0.5.2
     version: 0.5.2
@@ -253,8 +253,8 @@ packages:
     dev: true
     optional: true
 
-  /@tsconfig/node12@12.1.0:
-    resolution: {integrity: sha512-kdeyUs2jy6iHVq8H27ymIE1a/ci7LjEw9VvXtvP8FKr0QptiEoM30oPy8XFfcWiPdcd2VzYdCGMYwow+K+guXA==}
+  /@tsconfig/node14@14.1.0:
+    resolution: {integrity: sha512-VmsCG04YR58ciHBeJKBDNMWWfYbyP8FekWVuTlpstaUPlat1D0x/tXzkWP7yCMU0eSz9V4OZU0LBWTFJ3xZf6w==}
     dev: true
 
   /@types/adm-zip@0.5.2:

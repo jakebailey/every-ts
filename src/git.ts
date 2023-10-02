@@ -180,6 +180,7 @@ async function fixRef(ref: string, toHash = false) {
             if (toHash) {
                 return hash;
             }
+            // TODO: log a message that shows that we fixed this ref
             return possibleRef;
         } catch {
             // ignore
