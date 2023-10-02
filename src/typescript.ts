@@ -15,7 +15,7 @@ export class Tsc extends BaseCommand {
 
     override async execute(): Promise<number | void> {
         await ensureBuilt();
-        const result = await execa("node", [getTscPath(), ...this.args], { stdio: "inherit", reject: false });
+        const result = await execa(`node`, [getTscPath(), ...this.args], { stdio: `inherit`, reject: false });
         return result.exitCode;
     }
 }

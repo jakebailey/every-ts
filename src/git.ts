@@ -15,7 +15,7 @@ import {
 } from "./common.js";
 import { build } from "./repo.js";
 
-const actionsWithSideEffects = new Set(["start", "reset", "bad", "good", "new", "old", "skip", "replay"]);
+const actionsWithSideEffects = new Set([`start`, `reset`, `bad`, `good`, `new`, `old`, `skip`, `replay`]);
 
 export class Bisect extends BaseCommand {
     static override paths = [[`bisect`]];
@@ -31,11 +31,11 @@ export class Bisect extends BaseCommand {
         let revs = [...this.args];
 
         switch (this.subcommand) {
-            case "bad":
-            case "good":
-            case "new":
-            case "old":
-            case "skip":
+            case `bad`:
+            case `good`:
+            case `new`:
+            case `old`:
+            case `skip`:
                 revs = await Promise.all(revs.map((r) => findRev(r)));
                 break;
         }
@@ -43,22 +43,22 @@ export class Bisect extends BaseCommand {
         await ensureRepo();
 
         if (await isBisecting() && actionsWithSideEffects.has(this.subcommand)) {
-            await resetTypeScript("node_modules", "built");
+            await resetTypeScript(`node_modules`, `built`);
         }
 
-        await execa("git", ["bisect", this.subcommand, ...revs], { cwd: tsDir, stdio: "inherit" });
+        await execa(`git`, [`bisect`, this.subcommand, ...revs], { cwd: tsDir, stdio: `inherit` });
         await build();
     }
 }
 
 async function isBisecting() {
     try {
-        const { stdout } = await execa("git", ["bisect", "log"], { cwd: tsDir });
+        const { stdout } = await execa(`git`, [`bisect`, `log`], { cwd: tsDir });
         const lines = stdout.split(/\r?\n/);
-        if (lines.some((v) => v.startsWith("# first "))) {
+        if (lines.some((v) => v.startsWith(`# first `))) {
             return false;
         }
-        const actions = lines.filter((v) => !v.startsWith("#"));
+        const actions = lines.filter((v) => !v.startsWith(`#`));
         return actions.length >= 3;
     } catch {
         return false;
@@ -78,24 +78,24 @@ export class BisectRun extends BaseCommand {
         await ensureRepo();
 
         if (!await isBisecting()) {
-            throw new ExitError("Not bisecting");
+            throw new ExitError(`Not bisecting`);
         }
 
-        const { stdout: termGood } = await execa("git", ["bisect", "terms", "--term-good"], { cwd: tsDir });
-        const { stdout: termBad } = await execa("git", ["bisect", "terms", "--term-bad"], { cwd: tsDir });
+        const { stdout: termGood } = await execa(`git`, [`bisect`, `terms`, `--term-good`], { cwd: tsDir });
+        const { stdout: termBad } = await execa(`git`, [`bisect`, `terms`, `--term-bad`], { cwd: tsDir });
 
         while (await isBisecting()) {
-            await resetTypeScript("node_modules", "built");
+            await resetTypeScript(`node_modules`, `built`);
             await build();
 
-            const result = await execa(this.args[0], this.args.slice(1), { reject: false, stdio: "inherit" });
-            await resetTypeScript("node_modules", "built");
+            const result = await execa(this.args[0], this.args.slice(1), { reject: false, stdio: `inherit` });
+            await resetTypeScript(`node_modules`, `built`);
             if (result.exitCode === 0) {
-                await execa("git", ["bisect", termGood], { cwd: tsDir, stdio: "inherit" });
+                await execa(`git`, [`bisect`, termGood], { cwd: tsDir, stdio: `inherit` });
             } else if (result.exitCode === 125) {
-                await execa("git", ["bisect", "skip"], { cwd: tsDir, stdio: "inherit" });
+                await execa(`git`, [`bisect`, `skip`], { cwd: tsDir, stdio: `inherit` });
             } else if (result.exitCode < 128) {
-                await execa("git", ["bisect", termBad], { cwd: tsDir, stdio: "inherit" });
+                await execa(`git`, [`bisect`, termBad], { cwd: tsDir, stdio: `inherit` });
             } else {
                 throw result;
             }
@@ -114,15 +114,15 @@ export class Switch extends BaseCommand {
 
     override async execute(): Promise<number | void> {
         await ensureRepo();
-        const current = await revParse("HEAD");
+        const current = await revParse(`HEAD`);
         const target = await findRev(this.rev, true);
 
         if (current === target) {
             return;
         }
 
-        await resetTypeScript("node_modules", "built");
-        await execa("git", ["switch", "--detach", target], { cwd: tsDir, stdio: "inherit" });
+        await resetTypeScript(`node_modules`, `built`);
+        await execa(`git`, [`switch`, `--detach`, target], { cwd: tsDir, stdio: `inherit` });
         await build();
     }
 }
@@ -136,7 +136,7 @@ export class Fetch extends BaseCommand {
 
     override async execute(): Promise<number | void> {
         await ensureRepo();
-        await execa("git", ["fetch", "--all", "--tags"], { cwd: tsDir });
+        await execa(`git`, [`fetch`, `--all`, `--tags`], { cwd: tsDir });
     }
 }
 
@@ -150,8 +150,8 @@ export async function ensureRepo() {
     await ensureDataDir();
     const stat = await tryStat(tsDir);
     if (!stat?.isDirectory()) {
-        await execa("git", ["clone", "--filter=blob:none", "https://github.com/microsoft/TypeScript.git", tsDir], {
-            stdio: "inherit",
+        await execa(`git`, [`clone`, `--filter=blob:none`, `https://github.com/microsoft/TypeScript.git`, tsDir], {
+            stdio: `inherit`,
         });
     }
 
@@ -161,12 +161,12 @@ export async function ensureRepo() {
 export async function resetTypeScript(...keep: string[]) {
     const excludes = [];
     for (const exclude of keep ?? []) {
-        excludes.push("-e", exclude);
+        excludes.push(`-e`, exclude);
     }
-    await execa("git", ["clean", "-fdx", ...excludes], { cwd: tsDir });
-    await execa("git", ["reset", "--hard", "HEAD"], { cwd: tsDir });
+    await execa(`git`, [`clean`, `-fdx`, ...excludes], { cwd: tsDir });
+    await execa(`git`, [`reset`, `--hard`, `HEAD`], { cwd: tsDir });
 
-    if (!keep?.includes("node_modules")) {
+    if (!keep?.includes(`node_modules`)) {
         await rimraf(nodeModulesHashPath);
     }
     await rimraf(buildCommitHashPath);
@@ -196,7 +196,7 @@ async function findRev(rev: string, toHash = false) {
         }
     }
 
-    if (rev.includes("-dev.")) {
+    if (rev.includes(`-dev.`)) {
         const version = semver.parse(rev)?.format();
         if (version) {
             const response = await fetch(`https://registry.npmjs.org/typescript/${version}`);
@@ -216,6 +216,6 @@ async function findRev(rev: string, toHash = false) {
 }
 
 async function revParse(rev: string) {
-    const { stdout } = await execa("git", ["rev-parse", rev], { cwd: tsDir });
+    const { stdout } = await execa(`git`, [`rev-parse`, rev], { cwd: tsDir });
     return stdout;
 }

@@ -8,12 +8,12 @@ import { Command } from "clipanion";
 const __filename = url.fileURLToPath(new URL(import.meta.url));
 const __dirname = path.dirname(__filename);
 
-const packageRoot = path.resolve(__dirname, "..");
-const dataDir = path.join(packageRoot, ".data");
-export const tsDir = path.join(dataDir, "TypeScript");
-export const fnmDir = path.join(dataDir, "fnm");
-export const nodeModulesHashPath = path.join(dataDir, "node_modules.hash");
-export const buildCommitHashPath = path.join(dataDir, "builtCommit.hash");
+const packageRoot = path.resolve(__dirname, `..`);
+const dataDir = path.join(packageRoot, `.data`);
+export const tsDir = path.join(dataDir, `TypeScript`);
+export const fnmDir = path.join(dataDir, `fnm`);
+export const nodeModulesHashPath = path.join(dataDir, `node_modules.hash`);
+export const buildCommitHashPath = path.join(dataDir, `builtCommit.hash`);
 
 export async function tryStat(p: string) {
     try {
@@ -29,11 +29,11 @@ export async function ensureDataDir() {
 
 export async function hashFile(p: string) {
     const contents = await fs.promises.readFile(p);
-    return crypto.createHash("sha256").update(contents).digest("hex");
+    return crypto.createHash(`sha256`).update(contents).digest(`hex`);
 }
 
 export function rimraf(p: fs.PathLike) {
-    return fs.promises.rm(p, { recursive: true, force: true, maxRetries: process.platform === "win32" ? 10 : 0 });
+    return fs.promises.rm(p, { recursive: true, force: true, maxRetries: process.platform === `win32` ? 10 : 0 });
 }
 
 export class ExitError extends Error {
