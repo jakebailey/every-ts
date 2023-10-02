@@ -1,4 +1,4 @@
-import { Command, type CommandClass, Option } from "clipanion";
+import { Command, Option } from "clipanion";
 import { execa } from "execa";
 
 import {
@@ -13,44 +13,41 @@ import {
 } from "./common.js";
 import { build } from "./repo.js";
 
-const actionsWithSideEffects = ["start", "reset", "bad", "good", "new", "old", "skip", "replay"];
-const actionsWithoutSideEffects = ["terms", "visualize", "view", "log"];
-const actions = [...actionsWithSideEffects, ...actionsWithoutSideEffects];
+const actionsWithSideEffects = new Set(["start", "reset", "bad", "good", "new", "old", "skip", "replay"]);
 
-export const bisectActionCommands: CommandClass[] = actions.map((action) => {
-    return class extends BaseCommand {
-        static override paths: string[][] = [[`bisect`, action]];
+export class Bisect extends BaseCommand {
+    static override paths = [[`bisect`]];
 
-        static override usage = Command.Usage({
-            description: `git bisect ${action}`,
-        });
+    static override usage = Command.Usage({
+        description: `git bisect`,
+    });
 
-        args = Option.Proxy();
+    subcommand = Option.String({ required: true });
+    args = Option.Proxy();
 
-        override async execute(): Promise<number | void> {
-            let refs = [...this.args];
+    override async execute(): Promise<number | void> {
+        let refs = [...this.args];
 
-            switch (action) {
-                case "bad":
-                case "good":
-                case "new":
-                case "old":
-                case "skip":
-                    refs = await Promise.all(refs.map((r) => fixRef(r)));
-                    break;
-            }
-
-            await ensureRepo();
-
-            if (await isBisecting() && actionsWithSideEffects.includes(action)) {
-                await resetTypeScript("node_modules", "built");
-            }
-
-            await execa("git", ["bisect", action, ...refs], { cwd: tsDir, stdio: "inherit" });
-            await build();
+        switch (this.subcommand) {
+            case "bad":
+            case "good":
+            case "new":
+            case "old":
+            case "skip":
+                refs = await Promise.all(refs.map((r) => fixRef(r)));
+                break;
         }
-    };
-});
+
+        await ensureRepo();
+
+        if (await isBisecting() && actionsWithSideEffects.has(this.subcommand)) {
+            await resetTypeScript("node_modules", "built");
+        }
+
+        await execa("git", ["bisect", this.subcommand, ...refs], { cwd: tsDir, stdio: "inherit" });
+        await build();
+    }
+}
 
 async function isBisecting() {
     try {

@@ -2,7 +2,7 @@ import "@cspotcode/source-map-support/register.js";
 
 import { Builtins, Cli } from "clipanion";
 
-import { bisectActionCommands, BisectRun, Switch } from "./git.js";
+import { Bisect, BisectRun, Switch } from "./git.js";
 import { Fetch } from "./git.js";
 import { Tsc } from "./typescript.js";
 
@@ -12,9 +12,7 @@ const cli = new Cli({
 });
 
 cli.register(Builtins.HelpCommand);
-for (const command of bisectActionCommands) {
-    cli.register(command);
-}
+cli.register(Bisect);
 cli.register(BisectRun);
 cli.register(Switch);
 cli.register(Fetch);
