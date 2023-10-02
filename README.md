@@ -73,9 +73,8 @@ Date:   Thu Aug 3 15:53:30 2023 -0700
 $ every-ts bisect reset
 ```
 
-<!-- TODO: need a way to get TS bin into run PATH
-
-`bisect run` is also supported:
+`bisect run` is also supported. The executed command will have TypeScript's bin
+directory prepended to the path, so you can run `tsc` directly:
 
 ```
 $ every-ts bisect start
@@ -86,7 +85,7 @@ $ every-ts bisect new v4.9.4
 Bisecting: a merge base must be tested
 [0aa49c152d37f97e16ad3d166701d0f7166a635e] Update package-lock.json
 $ every-ts bisect run tsc --version
-``` -->
+```
 
 For more info on `git bisect`, see the
 [git docs](https://git-scm.com/docs/git-bisect).
