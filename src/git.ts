@@ -21,7 +21,7 @@ export class Bisect extends BaseCommand {
     static override paths = [[`bisect`]];
 
     static override usage = Command.Usage({
-        description: `git bisect`,
+        description: `Wraps "git bisect".`,
     });
 
     subcommand = Option.String({ required: true });
@@ -69,7 +69,7 @@ export class BisectRun extends BaseCommand {
     static override paths = [[`bisect`, `run`]];
 
     static override usage = Command.Usage({
-        description: `git bisect run`,
+        description: `Wraps "git bisect run".`,
     });
 
     args = Option.Proxy({ required: 1 });
@@ -104,7 +104,11 @@ export class BisectRun extends BaseCommand {
 }
 
 export class Switch extends BaseCommand {
-    static override paths = [[`switch`]];
+    static override paths = [[`switch`], [`checkout`], [`clone`]];
+
+    static override usage = Command.Usage({
+        description: `Switches to the provided rev and builds it.`,
+    });
 
     rev = Option.String();
 
@@ -125,6 +129,10 @@ export class Switch extends BaseCommand {
 
 export class Fetch extends BaseCommand {
     static override paths = [[`fetch`]];
+
+    static override usage = Command.Usage({
+        description: `Fetches the latest info for the TypeScript checkout.`,
+    });
 
     override async execute(): Promise<number | void> {
         await ensureRepo();

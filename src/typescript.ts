@@ -1,4 +1,4 @@
-import { Option } from "clipanion";
+import { Command, Option } from "clipanion";
 import { execa } from "execa";
 
 import { BaseCommand } from "./common.js";
@@ -6,6 +6,11 @@ import { ensureBuilt, getTscPath } from "./repo.js";
 
 export class Tsc extends BaseCommand {
     static override paths: string[][] = [[`tsc`]];
+
+    static override usage = Command.Usage({
+        description: `Runs "tsc".`,
+    });
+
     args = Option.Proxy();
 
     override async execute(): Promise<number | void> {
