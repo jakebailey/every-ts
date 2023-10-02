@@ -19,19 +19,19 @@ To switch versions, use `every-ts switch <ref>`. This ref can be anything that
 `git` accepts. If `<ref>` isn't found, `origin/<ref>` and `origin/release-<ref>`
 will also be tried.
 
-```sh
-$ every-ts switch main           # Switches to `origin/main`
-$ every-ts switch release-2.7    # Switches to `origin/release-2.7`
-$ every-ts switch 1.8            # Switches to `origin/release-1.8`
-$ every-ts switch 1.8~100        # Switches 100 commits before `origin/release-1.8`
-$ every-ts switch v1.1           # Switches the tag `v1.1`
+```
+$ every-ts switch main         # Switches to `origin/main`
+$ every-ts switch release-2.7  # Switches to `origin/release-2.7`
+$ every-ts switch 1.8          # Switches to `origin/release-1.8`
+$ every-ts switch 1.8~100      # Switches 100 commits before `origin/release-1.8`
+$ every-ts switch v1.1         # Switches the tag `v1.1`
 ```
 
 # Running `tsc`
 
 To invoke `tsc`, run `every-ts tsc`:
 
-```sh
+```
 $ every-ts switch main
 Version 5.3.0-dev
 $ every-ts switch 1.8~100
@@ -45,7 +45,7 @@ message TS6029: Version 1.1.0.0
 `every-ts` wraps `git bisect`, building TypeScript automatically. To use it, run
 `every-ts bisect` just like you would `git bisect`:
 
-```sh
+```
 $ every-ts bisect start
 status: waiting for both good and bad commits
 $ every-ts bisect bad v5.2.2
@@ -67,13 +67,14 @@ Author: Jake Bailey <5341706+jakebailey@users.noreply.github.com>
 Date:   Thu Aug 3 15:53:30 2023 -0700
 
     Improve performance of maybe stack in recursiveTypeRelatedTo (#55224)
+$ every-ts bisect reset
 ```
 
 <!-- TODO: need a way to get TS bin into run PATH
 
 `bisect run` is also supported:
 
-```sh
+```
 $ every-ts bisect start
 status: waiting for both good and bad commits
 $ every-ts bisect old v5.0.3
