@@ -35,11 +35,24 @@ To invoke `tsc`, run `every-ts tsc`:
 
 ```
 $ every-ts switch main
+$ every-ts exec tsc
 Version 5.3.0-dev
 $ every-ts switch 1.8~100
+$ every-ts exec tsc
 Version 1.8.0
 $ every-ts switch v1.1
+$ every-ts exec tsc
 message TS6029: Version 1.1.0.0
+```
+
+Alternatively, you can use `every-ts exec` to run commands in an environment
+with `tsc` on `PATH`:
+
+```
+$ every-ts switch main
+$ every-ts exec tsc --version
+Version 5.3.0-dev
+$ every-ts exec tsc -p ./path/to/tsconfig.json
 ```
 
 # Bisecting
