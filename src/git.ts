@@ -1,3 +1,5 @@
+import fs from "node:fs";
+
 import { Command, Option } from "clipanion";
 import { execa } from "execa";
 import fetch from "node-fetch";
@@ -8,12 +10,14 @@ import {
     buildCommitHashPath,
     ensureDataDir,
     ExitError,
+    getPATHWithBinDir,
     nodeModulesHashPath,
+    revParse,
     rimraf,
     tryStat,
     tsDir,
 } from "./common.js";
-import { build } from "./repo.js";
+import { ensureBuilt } from "./repo.js";
 
 const actionsAcceptingRevs = new Set([`start`, `bad`, `good`, `new`, `old`, `skip`]);
 const actionsWithSideEffects = new Set([`reset`, `replay`, ...actionsAcceptingRevs]);
@@ -64,7 +68,7 @@ export class Bisect extends BaseCommand {
         if (result.exitCode !== 0) {
             return result.exitCode;
         }
-        await build();
+        await ensureBuilt();
     }
 }
 
@@ -103,9 +107,13 @@ export class BisectRun extends BaseCommand {
 
         while (await isBisecting()) {
             await resetTypeScript(`node_modules`, `built`);
-            await build();
+            await ensureBuilt();
 
-            const result = await execa(this.args[0], this.args.slice(1), { stdio: `inherit`, reject: false });
+            const result = await execa(
+                this.args[0],
+                this.args.slice(1),
+                { stdio: `inherit`, reject: false, env: { PATH: getPATHWithBinDir() } },
+            );
             await resetTypeScript(`node_modules`, `built`);
 
             let bResult;
@@ -127,21 +135,24 @@ export class BisectRun extends BaseCommand {
 }
 
 export class Switch extends BaseCommand {
-    static override paths = [[`switch`], [`checkout`], [`clone`]];
+    static override paths = [[`switch`], [`checkout`], [`clone`], Command.Default];
 
     static override usage = Command.Usage({
         description: `Switches to the provided rev and builds it.`,
     });
 
-    rev = Option.String();
+    rev = Option.String({ required: false });
 
     override async execute(): Promise<number | void> {
         await ensureRepo();
-        const current = await revParse(`HEAD`);
-        const target = await findRev(this.rev, true);
 
-        if (current === target) {
-            return;
+        const target = await findRev(this.rev ?? `main`, true);
+        if (fs.existsSync(buildCommitHashPath)) {
+            const current = await revParse(`HEAD`);
+
+            if (current === target) {
+                return;
+            }
         }
 
         await resetTypeScript(`node_modules`, `built`);
@@ -153,7 +164,7 @@ export class Switch extends BaseCommand {
         if (result.exitCode !== 0) {
             return result.exitCode;
         }
-        await build();
+        await ensureBuilt();
     }
 }
 
@@ -243,9 +254,4 @@ async function findRev(rev: string, toHash = false) {
     }
 
     throw new ExitError(`Could not find ${rev}`);
-}
-
-async function revParse(rev: string) {
-    const { stdout } = await execa(`git`, [`rev-parse`, rev], { cwd: tsDir });
-    return stdout;
 }

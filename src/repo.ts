@@ -1,9 +1,19 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import cmdShim from "@zkochan/cmd-shim";
 import { execa } from "execa";
 
-import { buildCommitHashPath, ExitError, hashFile, nodeModulesHashPath, rimraf, tsDir } from "./common.js";
+import {
+    binDir,
+    buildCommitHashPath,
+    ExitError,
+    hashFile,
+    nodeModulesHashPath,
+    revParse,
+    rimraf,
+    tsDir,
+} from "./common.js";
 import { runInNode } from "./fnm.js";
 import { ensureRepo, resetTypeScript } from "./git.js";
 
@@ -137,9 +147,7 @@ async function tryBuildFns() {
     throw new ExitError(`could not build TypeScript`);
 }
 
-export async function ensureBuilt() {
-    await ensureRepo();
-
+async function ensureBuiltWorker() {
     const { stdout: commitHash } = await execa(`git`, [`rev-parse`, `HEAD`], { cwd: tsDir });
     try {
         const contents = await fs.promises.readFile(buildCommitHashPath, `utf8`);
@@ -173,13 +181,29 @@ export async function ensureBuilt() {
 }
 
 // TODO: maintain a file with the last commit hash that was built, like the package-lock.json hash
-export async function build() {
-    await ensureBuilt();
-    await execa(`node`, [getTscPath(), `--version`], { stdout: `ignore` });
+export async function ensureBuilt() {
+    await ensureRepo();
+    try {
+        await ensureBuiltWorker();
+        const paths = getPaths();
+        await execa(`node`, [paths.tsc, `--version`], { stdout: `ignore` }); // TODO: needed?
+
+        await rimraf(binDir);
+        await fs.promises.mkdir(binDir, { recursive: true });
+        const tscBin = path.join(binDir, `tsc`);
+        const tsserverBin = path.join(binDir, `tsserver`);
+
+        await cmdShim.ifExists(paths.tsc, tscBin);
+        await cmdShim.ifExists(paths.tsserver, tsserverBin);
+    } catch {
+        throw new Error(`Unable to build typescript at rev ${await revParse(`HEAD`)}; please file a bug!`);
+    }
 }
 
-export function getTscPath() {
+export function getPaths() {
     const libTsc = path.join(tsDir, `lib`, `tsc.js`);
     const binTsc = path.join(tsDir, `bin`, `tsc.js`);
-    return fs.existsSync(libTsc) ? libTsc : binTsc;
+    const tsc = fs.existsSync(libTsc) ? libTsc : binTsc;
+    const tsserver = path.join(path.dirname(tsc), `tsserver.js`);
+    return { tsc, tsserver };
 }

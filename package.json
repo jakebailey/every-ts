@@ -13,6 +13,7 @@
         "dist"
     ],
     "dependencies": {
+        "@zkochan/cmd-shim": "^6.0.0",
         "adm-zip": "^0.5.10",
         "clipanion": "4.0.0-rc.2",
         "execa": "^8.0.1",

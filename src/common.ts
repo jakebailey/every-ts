@@ -4,6 +4,7 @@ import path from "node:path";
 import url from "node:url";
 
 import { Command } from "clipanion";
+import { execa } from "execa";
 
 const __filename = url.fileURLToPath(new URL(import.meta.url));
 const __dirname = path.dirname(__filename);
@@ -12,11 +13,16 @@ const packageRoot = path.resolve(__dirname, `..`);
 const dataDir = path.join(packageRoot, `.data`);
 export const tsDir = path.join(dataDir, `TypeScript`);
 export const fnmDir = path.join(dataDir, `fnm`);
+export const binDir = path.join(dataDir, `bin`);
 export const nodeModulesHashPath = path.join(dataDir, `node_modules.hash`);
 export const buildCommitHashPath = path.join(dataDir, `builtCommit.hash`);
 
 export function getPackageVersion() {
     return JSON.parse(fs.readFileSync(path.join(packageRoot, `package.json`), `utf8`)).version;
+}
+
+export function getPATHWithBinDir() {
+    return `${binDir}${path.delimiter}${process.env[`PATH`]}`;
 }
 
 export async function tryStat(p: string) {
@@ -54,4 +60,9 @@ export abstract class BaseCommand extends Command {
         }
         return super.catch(error);
     }
+}
+
+export async function revParse(rev: string) {
+    const { stdout } = await execa(`git`, [`rev-parse`, rev], { cwd: tsDir });
+    return stdout;
 }
