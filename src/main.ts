@@ -1,5 +1,3 @@
-import "@cspotcode/source-map-support/register.js";
-
 import { Builtins, Cli } from "clipanion";
 
 import { Bisect, BisectRun, Switch } from "./git.js";
