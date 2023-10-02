@@ -1,5 +1,7 @@
 import { Command, Option } from "clipanion";
 import { execa } from "execa";
+import fetch from "node-fetch";
+import semver from "semver";
 
 import {
     BaseCommand,
@@ -116,7 +118,7 @@ export class Switch extends BaseCommand {
         }
 
         await resetTypeScript("node_modules", "built");
-        await execa("git", ["switch", "--detach", await findRev(this.rev)], { cwd: tsDir, stdio: "inherit" });
+        await execa("git", ["switch", "--detach", target], { cwd: tsDir, stdio: "inherit" });
         await build();
     }
 }
@@ -177,10 +179,28 @@ async function findRev(rev: string, toHash = false) {
             if (toHash) {
                 return hash;
             }
-            console.log(`Converted ${rev} to ${candidate}`);
+            if (rev !== candidate) {
+                console.log(`Resolved ${rev} to ${candidate}`);
+            }
             return candidate;
         } catch {
             // ignore
+        }
+    }
+
+    if (rev.includes("-dev.")) {
+        const version = semver.parse(rev)?.format();
+        if (version) {
+            const response = await fetch(`https://registry.npmjs.org/typescript/${version}`);
+            if (response.ok) {
+                const { gitHead } = (await response.json()) as { gitHead?: string; };
+                if (gitHead) {
+                    console.log(`Resolved ${rev} to ${gitHead}`);
+                    return gitHead;
+                } else {
+                    console.error(`${version} is too old to have commit metadata and cannot be resolved`);
+                }
+            }
         }
     }
 

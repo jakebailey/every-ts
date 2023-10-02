@@ -17,14 +17,16 @@ them.
 
 To switch versions, use `every-ts switch <rev>`. This rev can be anything that
 `git` accepts. If `<rev>` isn't found, `origin/<rev>` and `origin/release-<rev>`
-will also be tried.
+will also be tried. You may also pass in a `-dev` version, which will be
+resolved to the commit that generated that nightly build.
 
 ```
-$ every-ts switch main         # Switches to `origin/main`
-$ every-ts switch release-2.7  # Switches to `origin/release-2.7`
-$ every-ts switch 1.8          # Switches to `origin/release-1.8`
-$ every-ts switch 1.8~100      # Switches 100 commits before `origin/release-1.8`
-$ every-ts switch v1.1         # Switches the tag `v1.1`
+$ every-ts switch main                # Switches to `origin/main`
+$ every-ts switch release-2.7         # Switches to `origin/release-2.7`
+$ every-ts switch 1.8                 # Switches to `origin/release-1.8`
+$ every-ts switch 1.8~100             # Switches 100 commits before `origin/release-1.8`
+$ every-ts switch v1.1                # Switches the tag `v1.1`
+$ every-ts switch 5.3.0-dev.20231001  # Switches to the 20231001 nightly build
 ```
 
 # Running `tsc`
@@ -48,13 +50,14 @@ message TS6029: Version 1.1.0.0
 ```
 $ every-ts bisect start
 status: waiting for both good and bad commits
-$ every-ts bisect bad v5.2.2
+$ every-ts bisect bad 5.3.0-dev.20231001
 status: waiting for good commit(s), bad commit known
 $ every-ts bisect good v5.1.6
 Bisecting: a merge base must be tested
 [0aa49c152d37f97e16ad3d166701d0f7166a635e] Update package-lock.json
 $ every-ts tsc --version
 Version 5.1.0-dev
+# Do something with `every-ts tsc`...
 $ every-ts bisect good
 $ every-ts bisect bad
 $ every-ts bisect bad
