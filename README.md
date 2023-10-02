@@ -84,3 +84,6 @@ Bisecting: a merge base must be tested
 [0aa49c152d37f97e16ad3d166701d0f7166a635e] Update package-lock.json
 $ every-ts bisect run tsc --version
 ``` -->
+
+For more info on `git bisect`, see the
+[git docs](https://git-scm.com/docs/git-bisect).
