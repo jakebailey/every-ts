@@ -38,8 +38,7 @@
     "scripts": {
         "build": "tsc",
         "watch": "tsc --watch",
-        "prepack": "rimraf dist && npm run build",
-        "ci:publish": "pnpm changeset tag && pnpm publish"
+        "prepack": "rimraf dist && npm run build"
     },
     "engines": {
         "node": ">= 16.17"
