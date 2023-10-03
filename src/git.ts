@@ -204,7 +204,7 @@ export async function ensureRepo() {
 
 export async function resetTypeScript(...keep: string[]) {
     const excludes = [];
-    for (const exclude of keep ?? []) {
+    for (const exclude of keep) {
         excludes.push(`-e`, exclude);
     }
     await execa(`git`, [`clean`, `-fdx`, ...excludes], { cwd: tsDir });
