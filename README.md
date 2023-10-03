@@ -1,5 +1,12 @@
 # every-ts
 
+[![npm](https://img.shields.io/npm/v/every-ts.svg)](https://npmjs.com/package/every-ts)
+[![node](https://img.shields.io/node/v/every-ts.svg)](https://nodejs.org)
+
+```
+npm install -g every-ts
+```
+
 `every-ts` is a utility that can build _any_ version of TypeScript. Yes, that's
 right, any version, any commit, even main, v1.0.3, or in between. (If it breaks,
 let me know!)
