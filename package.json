@@ -1,6 +1,6 @@
 {
     "name": "every-ts",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "author": "Jake Bailey",
     "license": "MIT",
     "description": "A CLI to build and bisect any version of TypeScript",
