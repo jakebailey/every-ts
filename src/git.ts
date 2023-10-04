@@ -178,6 +178,9 @@ export class Fetch extends BaseCommand {
     override async execute(): Promise<number | void> {
         await ensureRepo();
         await execa(`git`, [`fetch`, `--all`, `--tags`], { cwd: tsDir });
+        // This will usually be a noop, but if this is what's used to fetch the first time,
+        // it will be unbuilt which is less than good.
+        await ensureBuilt();
     }
 }
 

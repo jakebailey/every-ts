@@ -4,7 +4,8 @@
 [![node](https://img.shields.io/node/v/every-ts.svg)](https://nodejs.org)
 
 ```
-npm install -g every-ts
+$ npm install -g every-ts
+$ every-ts
 ```
 
 `every-ts` is a utility that can build _any_ version of TypeScript. Yes, that's
@@ -36,6 +37,10 @@ $ every-ts switch 1.8~100             # Switches 100 commits before `origin/rele
 $ every-ts switch v1.1                # Switches the tag `v1.1`
 $ every-ts switch 5.3.0-dev.20231001  # Switches to the 20231001 nightly build
 ```
+
+## Fetching new changes
+
+To fetch the latest repo information, run `every-ts fetch`.
 
 ## Running `tsc`
 
