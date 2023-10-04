@@ -1,7 +1,7 @@
 import { Command, Option } from "clipanion";
 import { execa } from "execa";
 
-import { BaseCommand, getPATHWithBinDir } from "./common.js";
+import { BaseCommand, getPATHWithBinDir, tsDir } from "./common.js";
 import { ensureBuilt, getPaths } from "./repo.js";
 
 export class Tsc extends BaseCommand {
@@ -54,5 +54,18 @@ export class Exec extends BaseCommand {
             { stdio: `inherit`, reject: false, env: { PATH: getPATHWithBinDir() } },
         );
         return result.exitCode;
+    }
+}
+
+export class Dir extends BaseCommand {
+    static override paths: string[][] = [[`dir`]];
+
+    static override usage = Command.Usage({
+        description: `Gets the path to the TypeScript checkout, for use in "npm link", etc.`,
+    });
+
+    override async execute(): Promise<number | void> {
+        await ensureBuilt();
+        console.log(tsDir);
     }
 }
