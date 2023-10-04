@@ -68,6 +68,14 @@ Version 5.3.0-dev
 $ every-ts exec tsc -p ./path/to/tsconfig.json
 ```
 
+You can also link TypeScript into your package:
+
+```
+$ every-ts dir
+/home/jake/every-ts/.data/TypeScript
+$ npm link $(every-ts dir)
+```
+
 ## Using with VS Code
 
 To get a working path to use with VS Code, run `every-ts tsdk` to get the option
