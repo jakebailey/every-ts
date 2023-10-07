@@ -56,7 +56,25 @@ export class Bisect extends BaseCommand {
 
         await ensureRepo();
 
-        if (await isBisecting() && actionsWithSideEffects.has(this.subcommand)) {
+        let shouldReset = false;
+        const bisectInfo = await getBisectInfo();
+
+        if (this.subcommand === `start` && revs.length >= 2) {
+            shouldReset = true;
+        } else if (bisectInfo?.terms.size === 2) {
+            shouldReset = true;
+        } else {
+            if (
+                bisectInfo
+                && actionsWithSideEffects.has(this.subcommand)
+                && !bisectInfo.terms.has(this.subcommand)
+                && bisectInfo.terms.size === 1
+            ) {
+                shouldReset = true;
+            }
+        }
+
+        if (shouldReset) {
             await resetTypeScript(`node_modules`, `built`);
         }
 
@@ -72,17 +90,21 @@ export class Bisect extends BaseCommand {
     }
 }
 
-async function isBisecting() {
+async function getBisectInfo() {
     try {
         const { stdout } = await execa(`git`, [`bisect`, `log`], { cwd: tsDir });
         const lines = stdout.split(/\r?\n/);
-        if (lines.some((v) => v.startsWith(`# first `))) {
-            return false;
-        }
-        const actions = lines.filter((v) => !v.startsWith(`#`));
-        return actions.length >= 3;
+        const done = lines.some((v) => v.startsWith(`# first `));
+        // Info lines look like "# bad: ...", "# good: ...", "# skip: ...", "# new: ...", "# old: ...", "# status: ..."
+        const terms = new Set(
+            lines
+                .filter((v) => v.startsWith(`# `))
+                .map((v) => v.split(` `)[1].slice(0, -1))
+                .filter((v) => v !== `status` && v !== `skip`),
+        );
+        return { done, terms };
     } catch {
-        return false;
+        return undefined;
     }
 }
 
@@ -98,14 +120,14 @@ export class BisectRun extends BaseCommand {
     override async execute(): Promise<number | void> {
         await ensureRepo();
 
-        if (!await isBisecting()) {
+        if (!await getBisectInfo()) {
             throw new ExitError(`Not bisecting`);
         }
 
         const { stdout: termGood } = await execa(`git`, [`bisect`, `terms`, `--term-good`], { cwd: tsDir });
         const { stdout: termBad } = await execa(`git`, [`bisect`, `terms`, `--term-bad`], { cwd: tsDir });
 
-        while (await isBisecting()) {
+        while (!(await getBisectInfo())?.done) {
             await resetTypeScript(`node_modules`, `built`);
             await ensureBuilt();
 
