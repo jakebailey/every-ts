@@ -1,5 +1,12 @@
 # every-ts
 
+## 1.1.1
+
+### Patch Changes
+
+- 6e75119: Print a message when TS has been built successfully
+- 409dc01: Fix git bisect when repo isn't clean
+
 ## 1.1.0
 
 ### Minor Changes
