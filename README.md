@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/every-ts.svg)](https://npmjs.com/package/every-ts)
 [![node](https://img.shields.io/node/v/every-ts.svg)](https://nodejs.org)
 
-```
+```console
 $ npm install -g every-ts
 $ every-ts
 ```
@@ -29,7 +29,7 @@ To switch versions, use `every-ts switch <rev>`. This rev can be anything that
 and `v<rev>` will also be tried. You may also pass in a `-dev` version, which
 will be resolved to the commit that generated that nightly build.
 
-```
+```console
 $ every-ts switch main                # Switches to `origin/main`
 $ every-ts switch release-2.7         # Switches to `origin/release-2.7`
 $ every-ts switch 1.8                 # Switches to `origin/release-1.8`
@@ -46,7 +46,7 @@ To fetch the latest repo information, run `every-ts fetch`.
 
 To invoke `tsc`, run `every-ts tsc`:
 
-```
+```console
 $ every-ts switch main
 $ every-ts exec tsc
 Version 5.3.0-dev
@@ -61,7 +61,7 @@ message TS6029: Version 1.1.0.0
 Alternatively, you can use `every-ts exec` to run commands in an environment
 with `tsc` on `PATH`:
 
-```
+```console
 $ every-ts switch main
 $ every-ts exec tsc --version
 Version 5.3.0-dev
@@ -70,7 +70,7 @@ $ every-ts exec tsc -p ./path/to/tsconfig.json
 
 You can also link TypeScript into your package:
 
-```
+```console
 $ every-ts dir
 /home/jake/every-ts/.data/TypeScript
 $ npm link $(every-ts dir)
@@ -81,7 +81,7 @@ $ npm link $(every-ts dir)
 To get a working path to use with VS Code, run `every-ts tsdk` to get the option
 to add to `settings.json`:
 
-```
+```console
 $ every-ts tsdk
 "typescript.tsdk": "/home/jabaile/work/every-ts/.data/TypeScript/lib"
 ```
@@ -94,7 +94,7 @@ this active. The setting itself is not enough.
 `every-ts` wraps `git bisect`, building TypeScript automatically. To use it, run
 `every-ts bisect` just like you would `git bisect`:
 
-```
+```console
 $ every-ts bisect start
 status: waiting for both good and bad commits
 $ every-ts bisect bad 5.3.0-dev.20231001
@@ -123,7 +123,7 @@ $ every-ts bisect reset
 `bisect run` is also supported. The executed command will have TypeScript's bin
 directory prepended to the path, so you can run `tsc` directly:
 
-```
+```console
 $ every-ts bisect start
 status: waiting for both good and bad commits
 $ every-ts bisect old v5.0.3
