@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { Builtins, Cli } from "clipanion";
 
 import { getPackageVersion } from "./common.js";
