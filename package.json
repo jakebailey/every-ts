@@ -7,9 +7,10 @@
     "keywords": [],
     "repository": "github:jakebailey/every-ts",
     "type": "module",
-    "bin": "dist/main.js",
+    "bin": "./bin/every-ts.js",
     "preferUnplugged": true,
     "files": [
+        "bin",
         "dist"
     ],
     "dependencies": {
