@@ -1,5 +1,11 @@
 # every-ts
 
+## 1.1.2
+
+### Patch Changes
+
+- a491de0: Fix bin linking on Windows
+
 ## 1.1.1
 
 ### Patch Changes
