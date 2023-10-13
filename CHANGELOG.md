@@ -1,5 +1,11 @@
 # every-ts
 
+## 1.1.4
+
+### Patch Changes
+
+- 2069853: Fix node execution on Windows
+
 ## 1.1.3
 
 ### Patch Changes
