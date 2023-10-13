@@ -125,6 +125,7 @@ const buildFuncs = [
 ];
 
 async function tryBuildFns() {
+    let lastError: unknown;
     for (const fn of buildFuncs) {
         try {
             try {
@@ -132,19 +133,19 @@ async function tryBuildFns() {
                 await fixBuild();
                 await fn();
                 return;
-            } catch {
-                // console.log(e);
+            } catch (e) {
+                lastError = e;
             }
 
             await resetTypeScript(`node_modules`);
             await fixBuild();
             await fn();
             return;
-        } catch {
-            // console.log(e);
+        } catch (e) {
+            lastError = e;
         }
     }
-    throw new ExitError(`could not build TypeScript`);
+    throw lastError;
 }
 
 async function ensureBuiltWorker() {
@@ -201,7 +202,8 @@ export async function ensureBuilt() {
             await cmdShim.ifExists(paths.tsserver, tsserverBin);
             console.log(`TypeScript built successfully!`);
         }
-    } catch {
+    } catch (e) {
+        console.error(e);
         throw new ExitError(`Unable to build typescript at rev ${await revParse(`HEAD`)}; please file a bug!`);
     }
 }
