@@ -217,11 +217,12 @@ export async function ensureRepo() {
     const stat = await tryStat(tsDir);
     if (!stat?.isDirectory()) {
         console.log(`Cloning TypeScript; this may take a bit...`);
-        await execa(
-            `git`,
-            [`clone`, `--filter=blob:none`, `https://github.com/microsoft/TypeScript.git`, tsDir],
-            { stdio: `inherit` },
-        );
+        const args = [`clone`, `--filter=blob:none`];
+        if (process.platform === `win32`) {
+            args.push(`-c`, `core.longpaths=true`);
+        }
+        args.push(`https://github.com/microsoft/TypeScript.git`, tsDir);
+        await execa(`git`, args, { stdio: `inherit` });
     }
 
     repoCloned = true;
