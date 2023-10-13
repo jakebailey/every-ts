@@ -19,6 +19,7 @@ import { ensureRepo, resetTypeScript } from "./git.js";
 
 function getExecutableName(name: string) {
     if (process.platform === `win32`) {
+        // Workaround for https://github.com/Schniz/fnm/issues/1054
         return `${name}.cmd`;
     }
     return name;
