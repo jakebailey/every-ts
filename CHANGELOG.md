@@ -1,5 +1,12 @@
 # every-ts
 
+## 1.1.3
+
+### Patch Changes
+
+- c6bb829: Add extra logging for failed builds
+- 8203cd6: Ensure that longpaths are enabled when cloning on Windows
+
 ## 1.1.2
 
 ### Patch Changes
