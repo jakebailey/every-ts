@@ -17,6 +17,13 @@ import {
 import { runInNode } from "./fnm.js";
 import { ensureRepo, resetTypeScript } from "./git.js";
 
+function getExecutableName(name: string) {
+    if (process.platform === `win32`) {
+        return `${name}.cmd`;
+    }
+    return name;
+}
+
 async function getBuildCommand() {
     const dir = await fs.promises.readdir(tsDir);
     let name;
@@ -30,11 +37,7 @@ async function getBuildCommand() {
         throw new ExitError(`build command unknown`);
     }
 
-    if (process.platform === `win32`) {
-        name += `.cmd`;
-    }
-
-    return path.join(`node_modules`, `.bin`, name);
+    return path.join(`node_modules`, `.bin`, getExecutableName(name));
 }
 
 async function getCommitDate() {
@@ -51,9 +54,9 @@ async function getPackageManagerCommand() {
     const packageJson = JSON.parse(packageJsonContents);
     const packageManager = packageJson?.packageManager;
     if (packageManager) {
-        return [`npx`, packageManager];
+        return [getExecutableName(`npx`), packageManager];
     }
-    return [`npm`];
+    return [getExecutableName(`npm`)];
 }
 
 async function tryInstall() {
