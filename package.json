@@ -25,7 +25,7 @@
         "@changesets/cli": "^2.26.2",
         "@tsconfig/node16": "^16.1.1",
         "@types/adm-zip": "^0.5.2",
-        "@types/node": "^20.8.3",
+        "@types/node": "^20.8.8",
         "@types/semver": "^7.5.3",
         "@typescript-eslint/eslint-plugin": "^6.7.4",
         "@typescript-eslint/parser": "^6.7.4",
@@ -42,6 +42,6 @@
         "prepack": "rimraf dist && npm run build"
     },
     "engines": {
-        "node": ">= 16.17"
+        "node": ">= 20.9.0"
     }
 }

@@ -35,8 +35,8 @@ devDependencies:
     specifier: ^0.5.2
     version: 0.5.2
   '@types/node':
-    specifier: ^20.8.3
-    version: 20.8.3
+    specifier: ^20.8.8
+    version: 20.8.8
   '@types/semver':
     specifier: ^7.5.3
     version: 7.5.3
@@ -457,7 +457,7 @@ packages:
   /@types/adm-zip@0.5.2:
     resolution: {integrity: sha512-33OTTnnW3onOE6HJuoqsi7T7Ojupz7zO/Vs5ddRNVCYQnu4lg05RqH/pr9eidHGvGyYfdO4uPO9cvegAMixBCQ==}
     dependencies:
-      '@types/node': 20.8.3
+      '@types/node': 20.8.8
     dev: true
 
   /@types/is-ci@3.0.1:
@@ -478,8 +478,10 @@ packages:
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
     dev: true
 
-  /@types/node@20.8.3:
-    resolution: {integrity: sha512-jxiZQFpb+NlH5kjW49vXxvxTjeeqlbsnTAdBTKpzEdPs9itay7MscYXz3Fo9VYFEsfQ6LJFitHad3faerLAjCw==}
+  /@types/node@20.8.8:
+    resolution: {integrity: sha512-YRsdVxq6OaLfmR9Hy816IMp33xOBjfyOgUd77ehqg96CFywxAPbDbXvAsuN2KVg2HOT8Eh6uAfU+l4WffwPVrQ==}
+    dependencies:
+      undici-types: 5.25.3
     dev: true
 
   /@types/normalize-package-data@2.4.2:
@@ -2803,6 +2805,10 @@ packages:
       has-bigints: 1.0.2
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
+    dev: true
+
+  /undici-types@5.25.3:
+    resolution: {integrity: sha512-Ga1jfYwRn7+cP9v8auvEXN1rX3sWqlayd4HP7OKk4mZWylEmu3KzXDUGrQUN6Ol7qo1gPvB2e5gX6udnyEPgdA==}
     dev: true
 
   /universalify@0.1.2:
