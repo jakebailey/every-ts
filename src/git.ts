@@ -140,10 +140,13 @@ export class BisectRun extends BaseCommand {
 
             let bResult;
             if (result.exitCode === 0) {
+                console.log(`git bisect ${termGood}`);
                 bResult = await execa(`git`, [`bisect`, termGood], { cwd: tsDir, stdio: `inherit`, reject: false });
             } else if (result.exitCode === 125) {
+                console.log(`git bisect skip`);
                 bResult = await execa(`git`, [`bisect`, `skip`], { cwd: tsDir, stdio: `inherit`, reject: false });
             } else if (result.exitCode < 128) {
+                console.log(`git bisect ${termBad}`);
                 bResult = await execa(`git`, [`bisect`, termBad], { cwd: tsDir, stdio: `inherit`, reject: false });
             } else {
                 throw result;
