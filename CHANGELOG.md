@@ -1,5 +1,11 @@
 # every-ts
 
+## 1.2.1
+
+### Patch Changes
+
+- 713e55f: Add missing --version flag
+
 ## 1.2.0
 
 ### Minor Changes
