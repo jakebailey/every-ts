@@ -13,6 +13,7 @@ const cli = new Cli({
 });
 
 cli.register(Builtins.HelpCommand);
+cli.register(Builtins.VersionCommand);
 cli.register(Bisect);
 cli.register(BisectRun);
 cli.register(Switch);
