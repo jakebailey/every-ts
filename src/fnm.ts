@@ -29,6 +29,8 @@ function getPlatform(): FnmPlatform {
 
 let fnmInstalled = false;
 
+const fnmExe = path.join(fnmDir, process.platform === `win32` ? `fnm.exe` : `fnm`);
+
 export async function ensureFnm() {
     if (fnmInstalled) {
         return;
@@ -60,13 +62,11 @@ export async function ensureFnm() {
     });
 
     if (process.platform !== `win32`) {
-        await fs.promises.chmod(path.join(fnmDir, `fnm`), 0o755);
+        await fs.promises.chmod(fnmExe, 0o755);
     }
 
     fnmInstalled = true;
 }
-
-const fnmExe = path.join(fnmDir, process.platform === `win32` ? `fnm.exe` : `fnm`);
 
 const installedNode = new Set<string>();
 
