@@ -61,13 +61,12 @@ export async function ensureFnm() {
 
     if (process.platform !== `win32`) {
         await fs.promises.chmod(path.join(fnmDir, `fnm`), 0o755);
-        process.env[`PATH`] = `${fnmDir}${path.delimiter}${process.env[`PATH`]}`;
     }
 
     fnmInstalled = true;
 }
 
-const fnmExe = process.platform === `win32` ? path.join(fnmDir, `fnm.exe`) : `fnm`;
+const fnmExe = path.join(fnmDir, process.platform === `win32` ? `fnm.exe` : `fnm`);
 
 const installedNode = new Set<string>();
 
