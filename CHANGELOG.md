@@ -1,5 +1,15 @@
 # every-ts
 
+## 1.2.0
+
+### Minor Changes
+
+- d9a5c3b: Print bisect action during bisect run
+
+### Patch Changes
+
+- 831d1b7: Directly execute fnm instead of using PATH
+
 ## 1.1.4
 
 ### Patch Changes
