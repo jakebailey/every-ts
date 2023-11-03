@@ -13,7 +13,7 @@ export class Tsc extends BaseCommand {
 
     args = Option.Proxy();
 
-    override async execute(): Promise<number | void> {
+    override async executeOrThrow(): Promise<number | void> {
         await ensureBuilt();
         const { tsc } = getPaths();
         const result = await execa(`node`, [tsc, ...this.args], { stdio: `inherit`, reject: false });
@@ -30,7 +30,7 @@ export class Tsdk extends BaseCommand {
 
     args = Option.Proxy();
 
-    override async execute(): Promise<number | void> {
+    override async executeOrThrow(): Promise<number | void> {
         await ensureBuilt();
         const { baseDir } = getPaths();
         console.log(`"typescript.tsdk": ${JSON.stringify(baseDir)}`);
@@ -46,7 +46,7 @@ export class Exec extends BaseCommand {
 
     args = Option.Proxy({ required: 1 });
 
-    override async execute(): Promise<number | void> {
+    override async executeOrThrow(): Promise<number | void> {
         await ensureBuilt();
         const result = await execa(
             this.args[0],
@@ -64,7 +64,7 @@ export class Dir extends BaseCommand {
         description: `Gets the path to the TypeScript checkout, for use in "npm link", etc.`,
     });
 
-    override async execute(): Promise<number | void> {
+    override async executeOrThrow(): Promise<number | void> {
         await ensureBuilt();
         console.log(tsDir);
     }

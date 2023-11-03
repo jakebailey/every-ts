@@ -53,13 +53,19 @@ export class ExitError extends Error {
 }
 
 export abstract class BaseCommand extends Command {
-    override catch(error: any): Promise<void> {
-        if (error instanceof ExitError) {
-            this.context.stderr.write(`${error.message}\n`);
-            return Promise.resolve<any>(error.exitCode);
+    override async execute(): Promise<number | void> {
+        try {
+            return await this.executeOrThrow();
+        } catch (e) {
+            if (e instanceof ExitError) {
+                this.context.stderr.write(`${e.message}\n`);
+                return e.exitCode;
+            }
+            throw e;
         }
-        return super.catch(error);
     }
+
+    abstract executeOrThrow(): Promise<number | void>;
 }
 
 export async function revParse(rev: string) {

@@ -32,7 +32,7 @@ export class Bisect extends BaseCommand {
     subcommand = Option.String({ required: true });
     args = Option.Proxy();
 
-    override async execute(): Promise<number | void> {
+    override async executeOrThrow(): Promise<number | void> {
         let startArgs: string[] = [];
         let revs;
         let endArgs: string[] = [];
@@ -117,7 +117,7 @@ export class BisectRun extends BaseCommand {
 
     args = Option.Proxy({ required: 1 });
 
-    override async execute(): Promise<number | void> {
+    override async executeOrThrow(): Promise<number | void> {
         await ensureRepo();
 
         if (!await getBisectInfo()) {
@@ -168,7 +168,7 @@ export class Switch extends BaseCommand {
 
     rev = Option.String({ required: false });
 
-    override async execute(): Promise<number | void> {
+    override async executeOrThrow(): Promise<number | void> {
         await ensureRepo();
 
         const target = await findRev(this.rev ?? `main`, true);
@@ -200,7 +200,7 @@ export class Fetch extends BaseCommand {
         description: `Fetches the latest info for the TypeScript checkout.`,
     });
 
-    override async execute(): Promise<number | void> {
+    override async executeOrThrow(): Promise<number | void> {
         await ensureRepo();
         await execa(`git`, [`fetch`, `--all`, `--tags`], { cwd: tsDir });
         // This will usually be a noop, but if this is what's used to fetch the first time,
