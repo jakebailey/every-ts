@@ -1,5 +1,11 @@
 # every-ts
 
+## 1.2.2
+
+### Patch Changes
+
+- d4be77f: Fix missing exit codes
+
 ## 1.2.1
 
 ### Patch Changes
