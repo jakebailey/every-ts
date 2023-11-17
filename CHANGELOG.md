@@ -1,5 +1,11 @@
 # every-ts
 
+## 1.2.3
+
+### Patch Changes
+
+- fcc9b5f: Always reset checkout on bisect reset
+
 ## 1.2.2
 
 ### Patch Changes
