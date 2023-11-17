@@ -59,7 +59,9 @@ export class Bisect extends BaseCommand {
         let shouldReset = false;
         const bisectInfo = await getBisectInfo();
 
-        if (this.subcommand === `start` && revs.length >= 2) {
+        if (this.subcommand === `reset`) {
+            shouldReset = true;
+        } else if (this.subcommand === `start` && revs.length >= 2) {
             shouldReset = true;
         } else if (bisectInfo?.terms.size === 2) {
             shouldReset = true;
