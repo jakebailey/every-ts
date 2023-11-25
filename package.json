@@ -24,17 +24,17 @@
     "devDependencies": {
         "@changesets/cli": "^2.26.2",
         "@tsconfig/node16": "^16.1.1",
-        "@types/adm-zip": "^0.5.3",
-        "@types/node": "^20.8.9",
-        "@types/semver": "^7.5.4",
-        "@typescript-eslint/eslint-plugin": "^6.9.1",
-        "@typescript-eslint/parser": "^6.9.1",
-        "dprint": "^0.42.5",
-        "eslint": "^8.52.0",
+        "@types/adm-zip": "^0.5.5",
+        "@types/node": "^20.10.0",
+        "@types/semver": "^7.5.6",
+        "@typescript-eslint/eslint-plugin": "^6.12.0",
+        "@typescript-eslint/parser": "^6.12.0",
+        "dprint": "^0.43.0",
+        "eslint": "^8.54.0",
         "eslint-plugin-simple-import-sort": "^10.0.0",
         "eslint-plugin-unicorn": "^49.0.0",
         "rimraf": "^5.0.5",
-        "typescript": "^5.2.2"
+        "typescript": "^5.3.2"
     },
     "scripts": {
         "build": "tsc",
