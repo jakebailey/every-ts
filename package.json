@@ -29,7 +29,7 @@
         "@types/semver": "^7.5.6",
         "@typescript-eslint/eslint-plugin": "^6.12.0",
         "@typescript-eslint/parser": "^6.12.0",
-        "dprint": "^0.43.0",
+        "dprint": "^0.45.0",
         "eslint": "^8.54.0",
         "eslint-plugin-simple-import-sort": "^10.0.0",
         "eslint-plugin-unicorn": "^49.0.0",
