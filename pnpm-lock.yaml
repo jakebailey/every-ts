@@ -12,8 +12,8 @@ dependencies:
     specifier: ^0.5.10
     version: 0.5.10
   clipanion:
-    specifier: 4.0.0-rc.2
-    version: 4.0.0-rc.2(typanion@3.14.0)
+    specifier: 4.0.0-rc.3
+    version: 4.0.0-rc.3(typanion@3.14.0)
   execa:
     specifier: ^8.0.1
     version: 8.0.1
@@ -863,8 +863,8 @@ packages:
       escape-string-regexp: 1.0.5
     dev: true
 
-  /clipanion@4.0.0-rc.2(typanion@3.14.0):
-    resolution: {integrity: sha512-0IXugyri0bQs6/JLS9Uoh9xZ4kiDyFf6gAoikefPW/yHJZbS4We4jjx5HZPU/xfRjILSzZld9Q9P3JBJe6irUA==}
+  /clipanion@4.0.0-rc.3(typanion@3.14.0):
+    resolution: {integrity: sha512-+rJOJMt2N6Oikgtfqmo/Duvme7uz3SIedL2b6ycgCztQMiTfr3aQh2DDyLHl+QUPClKMNpSg3gDJFvNQYIcq1g==}
     peerDependencies:
       typanion: '*'
     dependencies:
