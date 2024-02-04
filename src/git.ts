@@ -33,6 +33,8 @@ export class Bisect extends BaseCommand {
     args = Option.Proxy();
 
     override async executeOrThrow(): Promise<number | void> {
+        await ensureRepo();
+
         let startArgs: string[] = [];
         let revs: string[] | undefined;
         let endArgs: string[] = [];
@@ -53,8 +55,6 @@ export class Bisect extends BaseCommand {
         if (actionsAcceptingRevs.has(this.subcommand)) {
             revs = await Promise.all(revs.map((r) => findRev(r)));
         }
-
-        await ensureRepo();
 
         let shouldReset = false;
         const bisectInfo = await getBisectInfo();
