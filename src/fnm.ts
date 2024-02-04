@@ -43,7 +43,6 @@ export async function ensureFnm() {
     }
 
     console.log(`Downloading fnm...`);
-    const fetch = (await import(`node-fetch`)).default;
     const url = `https://github.com/Schniz/fnm/releases/latest/download/fnm-${getPlatform()}.zip`;
     const response = await fetch(url);
     const buffer = await response.arrayBuffer();

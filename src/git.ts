@@ -2,7 +2,6 @@ import fs from "node:fs";
 
 import { Command, Option } from "clipanion";
 import { execa } from "execa";
-import fetch from "node-fetch";
 import semver from "semver";
 
 import {
