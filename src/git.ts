@@ -269,7 +269,7 @@ export async function resetTypeScript(...keep: string[]) {
 }
 
 async function findRev(rev: string, toHash = false) {
-    const cancidates = [
+    const candidates = [
         `origin/${rev}`,
         `release-${rev}`,
         `origin/release-${rev}`,
@@ -277,7 +277,7 @@ async function findRev(rev: string, toHash = false) {
         rev, // Try this last, so we refer to newer fetched revs first.
     ];
 
-    for (const candidate of cancidates) {
+    for (const candidate of candidates) {
         try {
             const hash = await revParse(candidate);
             if (toHash) {
