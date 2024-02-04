@@ -34,7 +34,7 @@ export class Bisect extends BaseCommand {
 
     override async executeOrThrow(): Promise<number | void> {
         let startArgs: string[] = [];
-        let revs;
+        let revs: string[] | undefined;
         let endArgs: string[] = [];
 
         const dashDashIndex = this.args.indexOf(`--`);
