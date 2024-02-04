@@ -1,5 +1,12 @@
 # every-ts
 
+## 1.2.4
+
+### Patch Changes
+
+- 685a3ed: Attempt to update local branches on `every-ts fetch`
+- c143c42: Ensure repo is cloned before bisect commands are run
+
 ## 1.2.3
 
 ### Patch Changes
