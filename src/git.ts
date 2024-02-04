@@ -204,7 +204,28 @@ export class Fetch extends BaseCommand {
 
     override async executeOrThrow(): Promise<number | void> {
         await ensureRepo();
-        await execa(`git`, [`fetch`, `--all`, `--tags`], { cwd: tsDir });
+        await execa(`git`, [`fetch`, `--all`, `--tags`, `--update-head-ok`], { cwd: tsDir });
+
+        // Attempt to fast forward all branches.
+        // https://stackoverflow.com/a/24451300
+        const { stdout: currentBranch } = await execa(`git`, [`rev-parse`, `--abbrev-ref`, `HEAD`], { cwd: tsDir });
+        const { stdout: branches } = await execa(`git`, [`for-each-ref`, `refs/heads`, `--format=%(refname:short)`], {
+            cwd: tsDir,
+        });
+
+        for (const branch of branches.split(/\r?\n/)) {
+            let { stdout: originBranch } = await execa(`git`, [`config`, `--get`, `branch.${branch}.merge`], {
+                cwd: tsDir,
+            });
+            originBranch = originBranch.slice(`refs/heads/`.length);
+            // eslint-disable-next-line unicorn/prefer-ternary
+            if (branch === currentBranch) {
+                await execa(`git`, [`merge`, `--ff-only`, `origin/${originBranch}`], { cwd: tsDir });
+            } else {
+                await execa(`git`, [`fetch`, `.`, `origin/${originBranch}:${branch}`], { cwd: tsDir });
+            }
+        }
+
         // This will usually be a noop, but if this is what's used to fetch the first time,
         // it will be unbuilt which is less than good.
         await ensureBuilt();
