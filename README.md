@@ -48,13 +48,13 @@ To invoke `tsc`, run `every-ts tsc`:
 
 ```console
 $ every-ts switch main
-$ every-ts exec tsc
+$ every-ts tsc
 Version 5.3.0-dev
 $ every-ts switch 1.8~100
-$ every-ts exec tsc
+$ every-ts tsc --version
 Version 1.8.0
 $ every-ts switch v1.1
-$ every-ts exec tsc
+$ every-ts tsc --version
 message TS6029: Version 1.1.0.0
 ```
 
