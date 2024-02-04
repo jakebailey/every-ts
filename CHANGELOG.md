@@ -1,5 +1,11 @@
 # every-ts
 
+## 2.0.0
+
+### Major Changes
+
+- ab5d9e5: Update minimum node version to v18
+
 ## 1.2.4
 
 ### Patch Changes
