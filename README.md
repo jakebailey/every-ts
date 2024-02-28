@@ -126,9 +126,9 @@ directory prepended to the path, so you can run `tsc` directly:
 ```console
 $ every-ts bisect start
 status: waiting for both good and bad commits
-$ every-ts bisect old v5.0.3
+$ every-ts bisect new v5.0.3
 status: waiting for good commit(s), bad commit known
-$ every-ts bisect new v4.9.4
+$ every-ts bisect old v4.9.4
 Bisecting: a merge base must be tested
 [0aa49c152d37f97e16ad3d166701d0f7166a635e] Update package-lock.json
 $ every-ts bisect run tsc --version
