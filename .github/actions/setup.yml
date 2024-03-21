@@ -1,0 +1,35 @@
+name: Setup
+
+inputs:
+  node-version:
+    default: "*"
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+      name: Install pnpm
+      with:
+        run_install: false
+
+    - name: Get pnpm store directory
+      id: pnpm-cache
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+    - uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4.0.1
+      name: Setup pnpm cache
+      with:
+        path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+
+    - name: pnpm install
+      run: pnpm install
+      shell: bash

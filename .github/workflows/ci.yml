@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  smoke:
+    name: Smoke test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - uses: ./.github/actions/setup
+      - run: pnpm build
+      - run: node ./dist/main.js tsc --version
+
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - uses: ./.github/actions/setup
+      - run: pnpm eslint .
+
+  dprint:
+    name: dprint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - uses: ./.github/actions/setup
+      - run: pnpm dprint check
+
+  required:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      - smoke
+      - eslint
+      - dprint
+
+    steps:
+      - name: Check required jobs
+        run: |
+          results=(
+            "${{ needs.smoke.result }}"
+            "${{ needs.eslint.result }}"
+            "${{ needs.dprint.result }}"
+          )
+
+          for result in "${results[@]}"; do
+            if [[ "$result" != "success" ]]; then
+              echo "One or more jobs failed"
+              exit 1
+            fi
+          done
