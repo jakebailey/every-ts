@@ -1,5 +1,11 @@
 # every-ts
 
+## 2.0.1
+
+### Patch Changes
+
+- e5a9066: Pin back adm-zip to prevent unzip from crashing
+
 ## 2.0.0
 
 ### Major Changes
