@@ -2,7 +2,7 @@ name: Setup
 
 inputs:
   node-version:
-    default: "*"
+    default: '*'
 
 runs:
   using: composite
