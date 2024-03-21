@@ -65,6 +65,7 @@ export async function ensureFnm() {
     }
 
     fnmInstalled = true;
+    console.log(`fnm installed`);
 }
 
 const installedNode = new Set<string>();
