@@ -1,5 +1,11 @@
 # every-ts
 
+## 2.0.2
+
+### Patch Changes
+
+- b2161bb: Drop accidental declared support for Node 16, which has never worked
+
 ## 2.0.1
 
 ### Patch Changes
