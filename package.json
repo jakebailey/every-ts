@@ -17,7 +17,7 @@
         "@zkochan/cmd-shim": "^6.0.0",
         "adm-zip": "0.5.10",
         "clipanion": "4.0.0-rc.3",
-        "execa": "^8.0.1",
+        "execa": "^9.3.0",
         "semver": "^7.6.2"
     },
     "devDependencies": {
