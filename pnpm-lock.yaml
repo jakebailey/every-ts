@@ -12,8 +12,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       adm-zip:
-        specifier: 0.5.10
-        version: 0.5.10
+        specifier: 0.5.15
+        version: 0.5.15
       clipanion:
         specifier: 4.0.0-rc.3
         version: 4.0.0-rc.3(typanion@3.14.0)
@@ -327,9 +327,9 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  adm-zip@0.5.10:
-    resolution: {integrity: sha512-x0HvcHqVJNTPk/Bw8JbLWlWoo6Wwnsug0fnYYro1HBrjxZ3G7/AZk7Ahv8JwDe1uIcz8eBqvu86FuF1POiG7vQ==}
-    engines: {node: '>=6.0'}
+  adm-zip@0.5.15:
+    resolution: {integrity: sha512-jYPWSeOA8EFoZnucrKCNihqBjoEGQSU4HKgHYQgKNEQ0pQF9a/DYuo/+fAxY76k4qe75LUlLWpAM1QWcBMTOKw==}
+    engines: {node: '>=12.0'}
 
   ajv@6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
@@ -1664,7 +1664,7 @@ snapshots:
 
   acorn@8.12.1: {}
 
-  adm-zip@0.5.10: {}
+  adm-zip@0.5.15: {}
 
   ajv@6.12.6:
     dependencies:
