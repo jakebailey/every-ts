@@ -1,5 +1,11 @@
 # every-ts
 
+## 2.0.3
+
+### Patch Changes
+
+- 6ffc475: Update deps
+
 ## 2.0.2
 
 ### Patch Changes
