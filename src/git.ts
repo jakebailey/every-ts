@@ -150,6 +150,7 @@ export class BisectRun extends BaseCommand {
                 console.log(`git bisect ${termBad}`);
                 bResult = await execa(`git`, [`bisect`, termBad], { cwd: tsDir, stdio: `inherit`, reject: false });
             } else {
+                // eslint-disable-next-line @typescript-eslint/only-throw-error
                 throw result;
             }
 
