@@ -6,10 +6,4 @@ module.exports = {
         if (major === "0") return "minor";
         return "latest";
     },
-    reject: (name, semver) => {
-        if (name === "adm-zip") {
-            return true;
-        }
-        return false;
-    },
 };
