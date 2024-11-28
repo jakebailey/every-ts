@@ -31,8 +31,8 @@ importers:
         specifier: ^18.2.4
         version: 18.2.4
       '@types/adm-zip':
-        specifier: ^0.5.5
-        version: 0.5.5
+        specifier: ^0.5.7
+        version: 0.5.7
       '@types/node':
         specifier: ^18.19.59
         version: 18.19.59
@@ -236,8 +236,8 @@ packages:
   '@tsconfig/node18@18.2.4':
     resolution: {integrity: sha512-5xxU8vVs9/FNcvm3gE07fPbn9tl6tqGGWA9tSlwsUEkBxtRnTsNmwrV8gasZ9F/EobaSv9+nu8AxUKccw77JpQ==}
 
-  '@types/adm-zip@0.5.5':
-    resolution: {integrity: sha512-YCGstVMjc4LTY5uK9/obvxBya93axZOVOyf2GSUulADzmLhYE45u2nAssCs/fWBs1Ifq5Vat75JTPwd5XZoPJw==}
+  '@types/adm-zip@0.5.7':
+    resolution: {integrity: sha512-DNEs/QvmyRLurdQPChqq0Md4zGvPwHerAJYWk9l2jCbD1VPpnzRJorOdiq4zsw09NFbYnhfsoEhWtxIzXpn2yw==}
 
   '@types/node@12.20.55':
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
@@ -1514,7 +1514,7 @@ snapshots:
 
   '@tsconfig/node18@18.2.4': {}
 
-  '@types/adm-zip@0.5.5':
+  '@types/adm-zip@0.5.7':
     dependencies:
       '@types/node': 18.19.59
 
