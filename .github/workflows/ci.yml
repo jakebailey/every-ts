@@ -58,16 +58,7 @@ jobs:
 
     steps:
       - name: Check required jobs
+        env:
+          NEEDS: ${{ toJson(needs) }}
         run: |
-          results=(
-            "${{ needs.smoke.result }}"
-            "${{ needs.eslint.result }}"
-            "${{ needs.dprint.result }}"
-          )
-
-          for result in "${results[@]}"; do
-            if [[ "$result" != "success" ]]; then
-              echo "One or more jobs failed"
-              exit 1
-            fi
-          done
+          ! echo $NEEDS | jq -e 'to_entries[] | { job: .key, result: .value.result } | select(.result != "success")'
