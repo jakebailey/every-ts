@@ -1,6 +1,6 @@
 // @ts-check
 import eslint from "@eslint/js";
-import eslintPlguinSimpleImportSort from "eslint-plugin-simple-import-sort";
+import eslintPluginSimpleImportSort from "eslint-plugin-simple-import-sort";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 import tseslint from "typescript-eslint";
@@ -32,7 +32,7 @@ export default tseslint.config(
             globals: globals.node,
         },
         plugins: {
-            "simple-import-sort": eslintPlguinSimpleImportSort,
+            "simple-import-sort": eslintPluginSimpleImportSort,
         },
     },
     {
