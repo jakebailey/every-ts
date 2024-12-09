@@ -17,23 +17,23 @@
         "@zkochan/cmd-shim": "^6.0.0",
         "adm-zip": "^0.5.16",
         "clipanion": "4.0.0-rc.4",
-        "execa": "^9.4.1",
+        "execa": "^9.5.2",
         "semver": "^7.6.3"
     },
     "devDependencies": {
-        "@changesets/cli": "^2.27.9",
+        "@changesets/cli": "^2.27.10",
         "@tsconfig/node18": "^18.2.4",
-        "@types/adm-zip": "^0.5.5",
-        "@types/node": "^18.19.59",
+        "@types/adm-zip": "^0.5.7",
+        "@types/node": "^18.19.67",
         "@types/semver": "^7.5.8",
-        "@typescript-eslint/eslint-plugin": "^8.11.0",
-        "@typescript-eslint/parser": "^8.11.0",
-        "dprint": "^0.47.4",
+        "@typescript-eslint/eslint-plugin": "^8.17.0",
+        "@typescript-eslint/parser": "^8.17.0",
+        "dprint": "^0.47.6",
         "eslint": "^8.57.1",
         "eslint-plugin-simple-import-sort": "^12.1.1",
-        "eslint-plugin-unicorn": "^56.0.0",
+        "eslint-plugin-unicorn": "^56.0.1",
         "rimraf": "^6.0.1",
-        "typescript": "^5.6.3"
+        "typescript": "^5.7.2"
     },
     "scripts": {
         "build": "tsc",
@@ -43,5 +43,5 @@
     "engines": {
         "node": ">= 18.19"
     },
-    "packageManager": "pnpm@9.12.2+sha512.22721b3a11f81661ae1ec68ce1a7b879425a1ca5b991c975b074ac220b187ce56c708fe5db69f4c962c989452eee76c82877f4ee80f474cebd61ee13461b6228"
+    "packageManager": "pnpm@9.15.0+sha512.76e2379760a4328ec4415815bcd6628dee727af3779aaa4c914e3944156c4299921a89f976381ee107d41f12cfa4b66681ca9c718f0668fa0831ed4c6d8ba56c"
 }
