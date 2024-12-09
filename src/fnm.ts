@@ -79,7 +79,6 @@ export async function runInNode(version: string, command: string[], opts?: Execa
 
     return run(command, opts);
 
-    // eslint-disable-next-line unicorn/consistent-function-scoping
     function run(command: string[], opts?: ExecaOptions) {
         return execa(
             fnmExe,
