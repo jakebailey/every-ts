@@ -27,7 +27,7 @@
         "@types/node": "^18.19.67",
         "@types/semver": "^7.5.8",
         "dprint": "^0.47.6",
-        "eslint": "^9.16.0",
+        "eslint": "^9.20.1",
         "eslint-plugin-simple-import-sort": "^12.1.1",
         "eslint-plugin-unicorn": "^56.0.1",
         "globals": "^15.13.0",
