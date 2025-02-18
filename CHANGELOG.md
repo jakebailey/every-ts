@@ -1,5 +1,17 @@
 # every-ts
 
+## 3.0.0
+
+### Major Changes
+
+- 52dd13a: Update execa, require Node 18.19
+
+### Patch Changes
+
+- 5539d56: Update deps
+- 33404c0: Update deps
+- 6ffc475: Update deps
+
 ## 2.0.2
 
 ### Patch Changes
