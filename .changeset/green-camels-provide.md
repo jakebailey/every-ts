@@ -1,5 +1,5 @@
 ---
-"every-ts": patch
+'every-ts': patch
 ---
 
 Update deps
