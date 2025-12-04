@@ -1,5 +1,11 @@
 # every-ts
 
+## 3.0.1
+
+### Patch Changes
+
+- 5412de6: Update deps
+
 ## 3.0.0
 
 ### Major Changes
