@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@zkochan/cmd-shim':
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^9.0.0
+        version: 9.0.0
       adm-zip:
         specifier: ^0.5.16
         version: 0.5.16
@@ -366,9 +366,9 @@ packages:
     resolution: {integrity: sha512-XJ9UD9+bbDo4a4epraTwG3TsNPeiB9aShrUneAVXy8q4LuwowN+qu89/6ByLMINqvIMeI9H9hOHQtg/ijrYXzQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@zkochan/cmd-shim@7.0.0':
-    resolution: {integrity: sha512-E5mgrRS8Kk80n19Xxmrx5qO9UG03FyZd8Me5gxYi++VPZsOv8+OsclA+0Fth4KTDCrQ/FkJryNFKJ6/642lo4g==}
-    engines: {node: '>=18.12'}
+  '@zkochan/cmd-shim@9.0.0':
+    resolution: {integrity: sha512-UH8qOvWZjZJr/mLk5xbrhGmBAf8iLbDkCZCyjnXri5cVFpvZgBUszZJmTmvDTIrzLAZ8lb++qvedOdsRokaQBg==}
+    engines: {node: '>=22.13'}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -1446,11 +1446,9 @@ snapshots:
       '@typescript-eslint/types': 8.58.0
       eslint-visitor-keys: 5.0.1
 
-  '@zkochan/cmd-shim@7.0.0':
+  '@zkochan/cmd-shim@9.0.0':
     dependencies:
       cmd-extension: 1.0.2
-      graceful-fs: 4.2.11
-      is-windows: 1.0.2
 
   acorn-jsx@5.3.2(acorn@8.16.0):
     dependencies:
