@@ -1,5 +1,5 @@
 issuer: https://token.actions.githubusercontent.com
-subject: repo:jakebailey/every-ts:ref:refs/heads/main
+subject: repo:jakebailey/every-ts:environment:npm
 claim_pattern:
   workflow_ref: jakebailey/every-ts/\.github/workflows/release\.yml@refs/heads/main
 
