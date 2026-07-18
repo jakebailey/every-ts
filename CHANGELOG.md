@@ -1,5 +1,11 @@
 # every-ts
 
+## 3.0.3
+
+### Patch Changes
+
+- ae6656e: Update deps, including adm-zip
+
 ## 3.0.2
 
 ### Patch Changes
