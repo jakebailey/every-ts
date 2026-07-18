@@ -218,7 +218,6 @@ export class Fetch extends BaseCommand {
                 cwd: tsDir,
             });
             originBranch = originBranch.slice(`refs/heads/`.length);
-            // eslint-disable-next-line unicorn/prefer-ternary
             if (branch === currentBranch) {
                 await execa(`git`, [`merge`, `--ff-only`, `origin/${originBranch}`], { cwd: tsDir });
             } else {

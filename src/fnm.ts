@@ -50,15 +50,7 @@ export async function ensureFnm() {
     const AdmZip = (await import(`adm-zip`)).default;
     const zip = new AdmZip(Buffer.from(buffer));
 
-    await new Promise<void>((resolve, reject) => {
-        zip.extractAllToAsync(fnmDir, undefined, undefined, (error) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve();
-            }
-        });
-    });
+    await zip.extractAllToAsync(fnmDir);
 
     if (process.platform !== `win32`) {
         await fs.promises.chmod(fnmExe, 0o755);
