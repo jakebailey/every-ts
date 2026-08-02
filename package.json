@@ -28,7 +28,7 @@
         "@eslint/js": "^10.0.1",
         "@tsconfig/node18": "^18.2.6",
         "@types/node": "^18.19.130",
-        "@types/semver": "^7.7.1",
+        "@types/semver": "^7.8.0",
         "dprint": "^0.55.2",
         "dprint-plugin-yaml": "0.6.0",
         "eslint": "^10.7.0",
