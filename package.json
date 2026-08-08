@@ -31,7 +31,7 @@
         "@types/semver": "^7.7.1",
         "dprint": "^0.55.2",
         "dprint-plugin-yaml": "0.6.0",
-        "eslint": "^10.7.0",
+        "eslint": "^10.8.1",
         "eslint-plugin-simple-import-sort": "^14.0.0",
         "globals": "^17.7.0",
         "rimraf": "^6.1.3",
