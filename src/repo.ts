@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import cmdShim from "@zkochan/cmd-shim";
+import { cmdShimIfExists } from "@zkochan/cmd-shim";
 import { execa } from "execa";
 
 import {
@@ -202,8 +202,8 @@ export async function ensureBuilt() {
             const tscBin = path.join(binDir, `tsc`);
             const tsserverBin = path.join(binDir, `tsserver`);
 
-            await cmdShim.ifExists(paths.tsc, tscBin);
-            await cmdShim.ifExists(paths.tsserver, tsserverBin);
+            await cmdShimIfExists(paths.tsc, tscBin);
+            await cmdShimIfExists(paths.tsserver, tsserverBin);
             console.log(`TypeScript built successfully!`);
         }
     } catch (e) {

@@ -20,19 +20,19 @@ jobs:
     environment: npm
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           filter: blob:none
 
-      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: '*'
+          node-version: '24'
           package-manager-cache: false
 
       - run: npm install -g npm@latest
 
-      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         name: Install pnpm
 
       - name: Get pnpm store directory
@@ -55,9 +55,10 @@ jobs:
       - name: Capture new release version
         id: version
         run: |
-          pnpm changeset version
-          echo "version=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
-          git restore .
+          pnpm changeset status --output "$RUNNER_TEMP/changeset-status.json"
+          current_version=$(jq -r '.version' package.json)
+          version=$(jq -r --arg current "$current_version" '.releases[0].newVersion // $current' "$RUNNER_TEMP/changeset-status.json")
+          echo "version=$version" >> $GITHUB_OUTPUT
 
       - uses: octo-sts/action@f603d3be9d8dd9871a265776e625a27b00effe05 # v1.1.1
         id: octo-sts
@@ -65,10 +66,10 @@ jobs:
           scope: jakebailey/every-ts
           identity: release
 
-      - uses: changesets/action@v1
+      - uses: changesets/action@22ccf9aa43179fe9e27dc62e575971d28cce197c # v2.0.0
         with:
-          title: 'Release v${{ steps.version.outputs.version }}'
-          commit: 'Release v${{ steps.version.outputs.version }}'
-          publish: pnpm changeset publish
-        env:
-          GITHUB_TOKEN: ${{ steps.octo-sts.outputs.token }}
+          github-token: ${{ steps.octo-sts.outputs.token }}
+          pr-title: 'Release v${{ steps.version.outputs.version }}'
+          commit-message: 'Release v${{ steps.version.outputs.version }}'
+          version-script: pnpm changeset version
+          publish-script: pnpm changeset publish
