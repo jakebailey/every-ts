@@ -1,5 +1,15 @@
 # every-ts
 
+## 4.0.0
+
+### Major Changes
+
+- 36422fb: Update dependencies and require Node.js 22.13 or newer.
+
+### Patch Changes
+
+- ae6656e: Update deps, including adm-zip
+
 ## 3.0.2
 
 ### Patch Changes
