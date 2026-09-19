@@ -13,7 +13,7 @@ importers:
         version: 9.0.7
       adm-zip:
         specifier: ^0.6.0
-        version: 0.6.0
+        version: 0.6.1
       clipanion:
         specifier: 4.0.0-rc.4
         version: 4.0.0-rc.4(typanion@3.14.0)
@@ -536,8 +536,8 @@ packages:
     resolution: {integrity: sha512-1J2s1SD5g/3/4o9qOpoBfTUf5bIETD1WDgB7axybHtV95nzxZ5sr6IeaCcQAZgEGYtAJQMciVAmYnQjvxYXwbQ==}
     engines: {node: '>=22.13'}
 
-  adm-zip@0.6.0:
-    resolution: {integrity: sha512-XleryMhbuksdKtofnWZ9Sk+4CUTbms4Mb/EU32SZwToAyZ5RgVos/ki8n+yr0LWHOGKuakbXTuuYNHLQjhddgg==}
+  adm-zip@0.6.1:
+    resolution: {integrity: sha512-Xwrja8nx9e5o2N1my4DsKCeKpdrnACyr1wtbPxBDgGzKzKyE9kRtBFA8mWldI+RVlD7CBZNWY/wQ2+ydwOR6kQ==}
     engines: {node: '>=14.0'}
 
   balanced-match@4.0.4:
@@ -1099,7 +1099,7 @@ snapshots:
       cmd-extension: 1.0.2
       graceful-fs: 4.2.11
 
-  adm-zip@0.6.0: {}
+  adm-zip@0.6.1: {}
 
   balanced-match@4.0.4: {}
 
